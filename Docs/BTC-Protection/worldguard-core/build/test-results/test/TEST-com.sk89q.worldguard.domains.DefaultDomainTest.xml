@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sk89q.worldguard.domains.DefaultDomainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-03T07:42:36" hostname="ATEM" time="0.021">
-  <properties/>
-  <testcase name="testContains()" classname="com.sk89q.worldguard.domains.DefaultDomainTest" time="0.021"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
