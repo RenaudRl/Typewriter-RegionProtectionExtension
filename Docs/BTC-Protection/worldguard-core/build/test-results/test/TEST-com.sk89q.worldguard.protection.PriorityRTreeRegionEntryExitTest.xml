@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sk89q.worldguard.protection.PriorityRTreeRegionEntryExitTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-11-03T07:42:36" hostname="ATEM" time="0.002">
+  <properties/>
+  <testcase name="testEntry()" classname="com.sk89q.worldguard.protection.PriorityRTreeRegionEntryExitTest" time="0.001"/>
+  <testcase name="testExit()" classname="com.sk89q.worldguard.protection.PriorityRTreeRegionEntryExitTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.typewritermc.protection.listener.ProtectionListenersIntegrationTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.typewritermc.protection.listener.ProtectionListenersIntegrationTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.typewritermc.protection.listener.html">com.typewritermc.protection.listener</a> &gt; ProtectionListenersIntegrationTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1.761s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">combat listener applies modifications, notifies attacker and logs changes</td>
+<td class="success">0.021s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">interaction listener denies, emits Adventure feedback and logs debug output</td>
+<td class="success">1.670s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">movement listener blocks teleportation and surfaces diagnostics</td>
+<td class="success">0.070s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>21:17:23.845 [pool-1-thread-1 @coroutine#10] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluationService name=#14
+21:17:23.872 [pool-1-thread-1 @coroutine#10] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionRepository name=#15
+21:17:23.932 [pool-1-thread-1 @coroutine#10] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for List name=child of #15#16
+21:17:24.206 [pool-1-thread-1 @coroutine#10] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluation name=child of #14#17
+21:17:24.208 [pool-1-thread-1 @coroutine#10] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering [RegionModel(regionId=spawn, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@262fc31e, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=5, flags=[FlagBinding(key=INTERACT, value=Boolean(enabled=false))], parentId=null, children=[])] on RegionRepository(#15).regionsAt(void)
+21:17:24.222 [pool-1-thread-1 @coroutine#13] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering Denied(reason=interaction.blocked) on FlagEvaluationService(#14).evaluate(FlagEvaluationContext(flag=FlagContext(region=RegionModel(regionId=spawn, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@262fc31e, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=5, flags=[FlagBinding(key=INTERACT, value=Boolean(enabled=false))], parentId=null, children=[]), event=org.bukkit.event.player.PlayerInteractEvent@320d6bbd, location=Location{world=org.mockbukkit.mockbukkit.world.WorldMock@15026b81,x=0.0,y=5.0,z=0.0,pitch=0.0,yaw=0.0}, player=org.mockbukkit.mockbukkit.entity.PlayerMock@b4ca8c11, source=org.mockbukkit.mockbukkit.entity.PlayerMock@b4ca8c11, target=null, runtimeData={})), INTERACT, continuation {})
+21:17:24.222 [pool-1-thread-1 @coroutine#10] DEBUG FlagActionExecutor -- Flag interact denied PlayerInteractEvent in region spawn (reason=interaction.blocked)
+21:17:24.239 [pool-1-thread-1 @coroutine#10] DEBUG ProtectionSettingsRepository -- Falling back to default protection settings: KoinApplication has not been started
+21:17:24.241 [pool-1-thread-1 @coroutine#10] DEBUG FlagActionExecutor -- Denied PlayerInteractEvent for Builder in region spawn via flag interact
+21:17:24.264 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluationService name=#18
+21:17:24.264 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionRepository name=#19
+21:17:24.265 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for ProtectionRuntimeService name=#20
+21:17:24.320 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for EntryDecision name=child of #20#21
+21:17:24.323 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for List name=child of #19#22
+21:17:24.325 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluation name=child of #18#23
+21:17:24.327 [pool-1-thread-1 @coroutine#14] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering Blocked(region=RegionModel(regionId=sanctuary, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@62a06a29, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=8, flags=[], parentId=null, children=[]), flag=ENTRY, evaluation=Denied(reason=entry.denied)) on ProtectionRuntimeService(#20).enforceEntry(org.mockbukkit.mockbukkit.entity.PlayerMock@ee4d1654, void, void, org.bukkit.event.player.PlayerTeleportEvent@5cfb01bb)
+21:17:24.327 [pool-1-thread-1 @coroutine#14] DEBUG ProtectionSettingsRepository -- Falling back to default protection settings: KoinApplication has not been started
+21:17:24.328 [pool-1-thread-1 @coroutine#17] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering Pass on FlagEvaluationService(#18).evaluate(FlagEvaluationContext(flag=FlagContext(region=RegionModel(regionId=sanctuary, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@62a06a29, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=8, flags=[], parentId=null, children=[]), event=org.bukkit.event.player.PlayerTeleportEvent@5cfb01bb, location=Location{world=org.mockbukkit.mockbukkit.world.WorldMock@3941d704,x=5.0,y=5.0,z=5.0,pitch=0.0,yaw=0.0}, player=org.mockbukkit.mockbukkit.entity.PlayerMock@ee4d1654, source=null, target=null, runtimeData={})), ENTRY_MESSAGE, continuation {})
+21:17:24.328 [pool-1-thread-1 @coroutine#14] DEBUG FlagActionExecutor -- Flag entry-deny-message passed for region sanctuary (no binding)
+21:17:24.328 [pool-1-thread-1 @coroutine#14] DEBUG MovementProtectionListener -- Teleport for Traveler cancelled by flag entry in region sanctuary
+21:17:24.328 [pool-1-thread-1 @coroutine#14] DEBUG FlagActionExecutor -- Denied PlayerTeleportEvent for Traveler in region sanctuary via flag entry
+21:17:24.334 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluationService name=#24
+21:17:24.334 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionRepository name=#25
+21:17:24.336 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for List name=child of #25#26
+21:17:24.344 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluation name=child of #24#27
+21:17:24.346 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for FlagEvaluation name=child of #24#28
+21:17:24.347 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering [RegionModel(regionId=arena, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@7c0e1139, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=12, flags=[], parentId=null, children=[])] on RegionRepository(#25).regionsAt(void)
+21:17:24.348 [pool-1-thread-1 @coroutine#23] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering Modify(metadata={damage.multiplier=0.5, message=Damage reduced by arena rules}) on FlagEvaluationService(#24).evaluate(FlagEvaluationContext(flag=FlagContext(region=RegionModel(regionId=arena, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@7c0e1139, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=12, flags=[], parentId=null, children=[]), event=org.bukkit.event.entity.EntityDamageByEntityEvent@6a684ba9, location=Location{world=org.mockbukkit.mockbukkit.world.WorldMock@70edc2f8,x=0.0,y=5.0,z=0.0,pitch=0.0,yaw=0.0}, player=org.mockbukkit.mockbukkit.entity.PlayerMock@d213a1a0, source=org.mockbukkit.mockbukkit.entity.PlayerMock@d213a1a0, target=org.mockbukkit.mockbukkit.entity.PlayerMock@51d7bc10, runtimeData={})), PVP, continuation {})
+21:17:24.349 [pool-1-thread-1 @coroutine#18] DEBUG FlagActionExecutor -- Flag pvp modified EntityDamageByEntityEvent in region arena with metadata keys [damage.multiplier, message]
+21:17:24.349 [pool-1-thread-1 @coroutine#18] DEBUG ProtectionSettingsRepository -- Falling back to default protection settings: KoinApplication has not been started
+21:17:24.349 [pool-1-thread-1 @coroutine#18] DEBUG FlagActionExecutor -- Sent custom message to Gladiator due to flag modifications in region arena
+21:17:24.349 [pool-1-thread-1 @coroutine#18] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering [RegionModel(regionId=arena, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@7c0e1139, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=12, flags=[], parentId=null, children=[])] on RegionRepository(#25).regionsAt(void)
+21:17:24.350 [pool-1-thread-1 @coroutine#24] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering Pass on FlagEvaluationService(#24).evaluate(FlagEvaluationContext(flag=FlagContext(region=RegionModel(regionId=arena, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@7c0e1139, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=12, flags=[], parentId=null, children=[]), event=org.bukkit.event.entity.EntityDamageByEntityEvent@6a684ba9, location=Location{world=org.mockbukkit.mockbukkit.world.WorldMock@70edc2f8,x=0.0,y=5.0,z=0.0,pitch=0.0,yaw=0.0}, player=org.mockbukkit.mockbukkit.entity.PlayerMock@51d7bc10, source=org.mockbukkit.mockbukkit.entity.PlayerMock@d213a1a0, target=org.mockbukkit.mockbukkit.entity.PlayerMock@51d7bc10, runtimeData={})), MOB_DAMAGE, continuation {})
+21:17:24.350 [pool-1-thread-1 @coroutine#18] DEBUG FlagActionExecutor -- Flag mob-damage passed for region arena (no binding)
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.14</a> at 10 nov. 2025, 21:17:24</p>
+</div>
+</div>
+</body>
+</html>

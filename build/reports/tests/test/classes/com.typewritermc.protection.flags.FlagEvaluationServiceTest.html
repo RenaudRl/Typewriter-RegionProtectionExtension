@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.typewritermc.protection.flags.FlagEvaluationServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.typewritermc.protection.flags.FlagEvaluationServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.typewritermc.protection.flags.html">com.typewritermc.protection.flags</a> &gt; FlagEvaluationServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">4</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.976s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+<li>
+<a href="#">Standard error</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">evaluates bindings by descending region priority</td>
+<td class="success">0.023s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">inherits parent bindings and caches resolved graphs</td>
+<td class="success">0.933s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">invalidate cascades through the hierarchy and emits update events</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">skips incompatible binding types while logging diagnostics</td>
+<td class="success">0.009s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>21:17:21.226 [Test worker @coroutine#2] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionRepository name=#1
+21:17:21.599 [pool-1-thread-1 @coroutine#5] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with interact (expected Boolean)
+21:17:21.600 [pool-1-thread-1 @coroutine#5] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with item-drop (expected Boolean)
+21:17:21.800 [pool-1-thread-1 @coroutine#5] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionModel name=child of #1#2
+21:17:21.805 [pool-1-thread-1 @coroutine#5] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionModel name=child of #1#3
+21:17:21.813 [pool-1-thread-1 @coroutine#5] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for World name=#4
+21:17:22.451 [pool-1-thread-1 @coroutine#5] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for Event name=#5
+21:17:22.500 [pool-1-thread-1 @coroutine#5] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering RegionModel(regionId=parent, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@12497757, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=1, flags=[FlagBinding(key=BUILD, value=Boolean(enabled=false))], parentId=null, children=[child]) on RegionRepository(#1).findById(parent)
+21:17:22.503 [pool-1-thread-1 @coroutine#5] DEBUG FlagEvaluationService -- Flag build denied action in region child (source parent)
+21:17:22.511 [pool-1-thread-1 @coroutine#5] DEBUG FlagEvaluationService -- Flag build denied action in region child (source parent)
+21:17:22.534 [pool-1-thread-1 @coroutine#6] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with interact (expected Boolean)
+21:17:22.534 [pool-1-thread-1 @coroutine#6] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with item-drop (expected Boolean)
+21:17:22.535 [pool-1-thread-1 @coroutine#6] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with interact (expected Boolean)
+21:17:22.536 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionModel name=child of #1#6
+21:17:22.537 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionModel name=child of #1#7
+21:17:22.538 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionModel name=child of #1#8
+21:17:22.538 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for World name=#9
+21:17:22.538 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for Event name=#10
+21:17:22.539 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering RegionModel(regionId=mid, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@40a5ffda, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=20, flags=[FlagBinding(key=INTERACT, value=Boolean(enabled=true))], parentId=root, children=[leaf]) on RegionRepository(#1).findById(mid)
+21:17:22.539 [pool-1-thread-1 @coroutine#6] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering RegionModel(regionId=root, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@8311b0a, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=30, flags=[FlagBinding(key=INTERACT, value=Boolean(enabled=false))], parentId=null, children=[mid]) on RegionRepository(#1).findById(root)
+21:17:22.558 [pool-1-thread-1 @coroutine#7] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with interact (expected Boolean)
+21:17:22.558 [pool-1-thread-1 @coroutine#7] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with item-drop (expected Boolean)
+21:17:22.559 [pool-1-thread-1 @coroutine#7] WARN RegionFlagRegistry -- Handler type IntValue is incompatible with item-drop (expected Boolean)
+21:17:22.560 [pool-1-thread-1 @coroutine#7] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for RegionModel name=child of #1#11
+21:17:22.561 [pool-1-thread-1 @coroutine#7] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for World name=#12
+21:17:22.561 [pool-1-thread-1 @coroutine#7] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for Event name=#13
+21:17:22.561 [pool-1-thread-1 @coroutine#7] DEBUG FlagEvaluationService -- Skipping flag item-drop binding from demo due to incompatible value Boolean
+21:17:22.568 [pool-1-thread-1 @coroutine#8] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with interact (expected Boolean)
+21:17:22.568 [pool-1-thread-1 @coroutine#8] WARN RegionFlagRegistry -- Handler type FlagValue is incompatible with item-drop (expected Boolean)
+21:17:22.574 [pool-1-thread-1 @coroutine#8] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering RegionModel(regionId=parent, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@5b9d0e63, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=1, flags=[], parentId=null, children=[child]) on RegionRepository(#1).findById(parent)
+21:17:22.575 [pool-1-thread-1 @coroutine#8] DEBUG io.mockk.impl.recording.states.AnsweringState -- Answering RegionModel(regionId=child, definition=com.typewritermc.protection.entry.region.RegionDefinitionEntry@9a5cef8, artifact=null, shape=CuboidShape(corner1=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0), corner2=Position(world=World(identifier=), x=0.0, y=0.0, z=0.0, yaw=0.0, pitch=0.0)), owners=[], members=[], groups=[], priority=2, flags=[], parentId=null, children=[]) on RegionRepository(#1).findById(child)
+</pre>
+</span>
+</div>
+<div class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>WARNING: A Java agent has been loaded dynamically (C:\Users\rlpir\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.6\46e2545d7a97b6ccb195621650c5957279eb4812\byte-buddy-agent-1.14.6.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.14</a> at 10 nov. 2025, 21:17:24</p>
+</div>
+</div>
+</body>
+</html>

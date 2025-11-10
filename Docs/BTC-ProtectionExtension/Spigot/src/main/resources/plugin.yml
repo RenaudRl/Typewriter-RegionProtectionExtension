@@ -1,0 +1,23 @@
+﻿name: WorldGuardExtraFlagsPlus
+description: |
+  Adds more flags to WorldGuard to help manage your server easily!
+  GitHub: https://github.com/tins-dev/WorldGuardExtraFlagsPlus
+  Documentation: -- tins --
+  Original author Website: https://joniaromaa.fi
+main: dev.tins.worldguardextraflagsplus.WorldGuardExtraFlagsPlusPlugin
+version: 4.3.2
+api-version: 1.20
+folia-supported: true
+depend: [ WorldGuard ]
+softdepend: [ ProtocolLib, PlaceholderAPI ]
+
+authors: [tins, isokissa3]
+
+commands:
+  wgefp:
+    description: Main command for WorldGuardExtraFlagsPlus
+    aliases: [wgefplus, worldguardextraflagsplus]
+    permission: worldguardextraflagsplus.reload
+    usage: |
+      /<command> reload - Reload messages from messages.yml
+

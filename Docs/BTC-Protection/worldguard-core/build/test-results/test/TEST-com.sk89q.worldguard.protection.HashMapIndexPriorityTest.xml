@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sk89q.worldguard.protection.HashMapIndexPriorityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-03T07:42:36" hostname="ATEM" time="0.005">
+  <properties/>
+  <testcase name="testNoPriorities()" classname="com.sk89q.worldguard.protection.HashMapIndexPriorityTest" time="0.004"/>
+  <testcase name="testPriorities2()" classname="com.sk89q.worldguard.protection.HashMapIndexPriorityTest" time="0.0"/>
+  <testcase name="testPriorities()" classname="com.sk89q.worldguard.protection.HashMapIndexPriorityTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

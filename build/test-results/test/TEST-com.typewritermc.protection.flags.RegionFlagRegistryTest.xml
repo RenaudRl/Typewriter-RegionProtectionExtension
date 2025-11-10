@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.typewritermc.protection.flags.RegionFlagRegistryTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-11-10T20:17:24.409Z" hostname="ATEM" time="0.058">
+  <properties/>
+  <testcase name="handlerEntryValidatesType()" classname="com.typewritermc.protection.flags.RegionFlagRegistryTest" time="0.053"/>
+  <testcase name="definitionExposesMetadata()" classname="com.typewritermc.protection.flags.RegionFlagRegistryTest" time="0.005"/>
+  <system-out><![CDATA[21:17:24.448 [Test worker @kotlinx.coroutines.test runner#29] DEBUG io.mockk.impl.instantiation.AbstractMockFactory -- Creating mockk for Event name=#29
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-11-03T07:42:36" hostname="ATEM" time="0.016">
+  <properties/>
+  <testcase name="useMaxPriorityAssociation=false" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.002"/>
+  <testcase name="useMaxPriorityAssociation=true" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.0"/>
+  <testcase name="useMaxPriorityAssociation=false" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.001"/>
+  <testcase name="useMaxPriorityAssociation=true" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.0"/>
+  <testcase name="testPlayer1BuildAccess()" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.001"/>
+  <testcase name="testPlayer2BuildAccess()" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.002"/>
+  <testcase name="testNonBuildFlag()" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.0"/>
+  <testcase name="useMaxPriorityAssociation=false" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.001"/>
+  <testcase name="useMaxPriorityAssociation=true" classname="com.sk89q.worldguard.protection.PriorityRTreeIndexTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

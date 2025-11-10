@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.16.0">
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\TestPlayer.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\domains\DefaultDomainTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\ApplicableRegionSetTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\FlagValueCalculatorMapFlagTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\FlagValueCalculatorTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\HashMapIndexPriorityTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\HashMapIndexRegionOverlapTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\HashMapIndexRemovalTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\HashMapIndexTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\MockApplicableRegionSet.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\PriorityRTreeIndexTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\PriorityRTreeRegionEntryExitTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\PriorityRTreeRegionOverlapTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\PriorityRTreeRegionPriorityTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\RegionEntryExitTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\RegionOverlapTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\RegionPriorityTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\protection\regions\RegionIntersectTest.java">
+</file>
+<file name="D:\GitHub\BTC-Protection\worldguard-core\src\test\java\com\sk89q\worldguard\util\CommandFilterTest.java">
+</file>
+</checkstyle>

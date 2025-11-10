@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.typewritermc.protection.settings.ProtectionMessagesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-10T20:17:24.355Z" hostname="ATEM" time="0.007">
+  <properties/>
+  <testcase name="selection mode display names use configured templates" classname="com.typewritermc.protection.settings.ProtectionMessagesTest" time="0.003"/>
+  <testcase name="message renderer replaces placeholders with values" classname="com.typewritermc.protection.settings.ProtectionMessagesTest" time="0.001"/>
+  <testcase name="message renderer accepts component placeholders" classname="com.typewritermc.protection.settings.ProtectionMessagesTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

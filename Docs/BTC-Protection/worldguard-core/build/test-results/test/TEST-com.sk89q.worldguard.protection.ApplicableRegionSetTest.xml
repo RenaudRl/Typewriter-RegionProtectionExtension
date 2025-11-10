@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sk89q.worldguard.protection.ApplicableRegionSetTest" tests="31" skipped="0" failures="0" errors="0" timestamp="2025-11-03T07:42:36" hostname="ATEM" time="0.122">
+  <properties/>
+  <testcase name="testBuildDenyFlag()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.051"/>
+  <testcase name="testGlobalRegionHavingOwnershipBuildFlagAllow()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.011"/>
+  <testcase name="testGlobalRegionHavingOwnershipBuildFlagUnset()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.002"/>
+  <testcase name="testHigherPriorityOverrideBuildDenyFlag()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.007"/>
+  <testcase name="testWildernessBuildWithRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.003"/>
+  <testcase name="testGlobalRegionBuildFlagAllow()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testHigherPriorityUnsetBuildDenyFlag()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testWildernessBuild()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.0"/>
+  <testcase name="testWildernessFlags()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.0"/>
+  <testcase name="testWildernessBuildWithGlobalRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testGlobalRegionHavingOwnershipBuildFlagDeny()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testPriorityDisjointBuildDenyFlagAndMembership()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testStateGlobalWithRegionsDefault()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testGlobalRegionBuildFlagDenyWithRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testStateFlagPriorityFallThrough()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testBuildRegionPriorities()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.0"/>
+  <testcase name="testStateFlagMultiplePriorityFallThrough()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.002"/>
+  <testcase name="testStateGlobalDefault()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.003"/>
+  <testcase name="testGlobalRegionDefaultBuild()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testBuildAllowFlag()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testNoGlobalRegionDefaultBuild()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testGlobalRegionBuildFlagAllowWithRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testNonStateFlagPriorityFallThrough()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testBuildAccess()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.0"/>
+  <testcase name="testGlobalRegionCommandBlacklistWithRegionWhitelist()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.002"/>
+  <testcase name="testWildernessFlagsWithGlobalRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testGlobalRegionBuildFlagDeny()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.002"/>
+  <testcase name="testPriorityDisjointBuildDenyFlagAndRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testFlagsWithRegion()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testPriorityDisjointMembershipAndBuildDenyFlag()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <testcase name="testRegionSetReturnsNullForUnsetState()" classname="com.sk89q.worldguard.protection.ApplicableRegionSetTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
