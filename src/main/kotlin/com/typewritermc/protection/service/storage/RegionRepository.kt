@@ -18,21 +18,20 @@ import com.typewritermc.protection.selection.SelectionMode
 import com.typewritermc.protection.selection.toRegionShape
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
 import org.koin.java.KoinJavaComponent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
 @Singleton
 class RegionRepository {
-    private val logger = LoggerFactory.getLogger("RegionRepository")
+    private val logger = Companion.logger
     private val lock = ReentrantReadWriteLock()
     private val regions = ConcurrentHashMap<String, RegionModel>()
-    private val pendingLogTask = AtomicReference<BukkitTask?>()
 
     init {
         reload()
@@ -202,21 +201,84 @@ class RegionRepository {
     }
 
     private fun scheduleLoadLog(size: Int) {
-        val message = "Loaded $size protection regions"
-        val plugin = try {
-            Bukkit.getPluginManager().getPlugin("TypeWriter")
-        } catch (ex: Exception) {
-            null
+        enqueueLoadLog("Loaded $size protection regions")
+    }
+
+    private companion object {
+        private val logger = LoggerFactory.getLogger("RegionRepository")
+        private val logMutex = Any()
+        private var pendingLoadLog: PendingLoadLog? = null
+        private var lastImmediateMessage: String? = null
+        private var lastImmediateTimestamp: Long = 0L
+
+        private data class PendingLoadLog(
+            val message: String,
+            var occurrences: Int,
+            var task: BukkitTask?,
+        )
+
+        private fun enqueueLoadLog(message: String) {
+            val plugin = try {
+                Bukkit.getPluginManager().getPlugin("TypeWriter")
+            } catch (ex: Exception) {
+                null
+            }
+            synchronized(logMutex) {
+                if (plugin == null || !plugin.isEnabled) {
+                    val now = System.currentTimeMillis()
+                    if (lastImmediateMessage == message && now - lastImmediateTimestamp < 1_000L) {
+                        lastImmediateTimestamp = now
+                        return
+                    }
+                    lastImmediateMessage = message
+                    lastImmediateTimestamp = now
+                    logger.info(message)
+                    return
+                }
+
+                lastImmediateMessage = null
+                lastImmediateTimestamp = 0L
+
+                val current = pendingLoadLog
+                if (current == null || current.message != message) {
+                    current?.task?.cancel()
+                    pendingLoadLog = PendingLoadLog(
+                        message = message,
+                        occurrences = 1,
+                        task = scheduleLog(plugin),
+                    )
+                } else {
+                    current.occurrences += 1
+                    current.task?.cancel()
+                    current.task = scheduleLog(plugin)
+                }
+            }
         }
-        if (plugin == null || !plugin.isEnabled) {
-            logger.info(message)
-            return
+
+        private fun scheduleLog(plugin: Plugin): BukkitTask {
+            return Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                flushPendingLog()
+            }, 5L)
         }
-        val task = Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-            pendingLogTask.set(null)
-            logger.info(message)
-        }, 5L)
-        pendingLogTask.getAndSet(task)?.cancel()
+
+        private fun flushPendingLog() {
+            val snapshot: PendingLoadLog?
+            synchronized(logMutex) {
+                snapshot = pendingLoadLog
+                pendingLoadLog = null
+            }
+            snapshot?.let { pending ->
+                if (pending.occurrences <= 1) {
+                    logger.info(pending.message)
+                } else {
+                    logger.info(
+                        "{} (triggered {} times in quick succession)",
+                        pending.message,
+                        pending.occurrences,
+                    )
+                }
+            }
+        }
     }
 }
 

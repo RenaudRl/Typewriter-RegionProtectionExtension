@@ -17,12 +17,14 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerTeleportEvent
+import org.bukkit.event.player.PlayerEvent
 import org.slf4j.LoggerFactory
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -41,7 +43,7 @@ class MovementProtectionListener(
         val decision = runtimeService.enforceEntry(event.player, event.from?.toTWPosition(), event.to?.toTWPosition(), event)
         if (decision is Blocked) {
             event.isCancelled = true
-            handleBlocked(event, decision, event.to)
+            handleBlocked(event, decision, event.to, "Movement")
         } else {
             updateRegionMembership(event.player, event.to)
         }
@@ -52,7 +54,7 @@ class MovementProtectionListener(
         val decision = runtimeService.enforceEntry(event.player, event.from?.toTWPosition(), event.to?.toTWPosition(), event)
         if (decision is Blocked) {
             event.isCancelled = true
-            handleBlocked(event, decision, event.to)
+            handleBlocked(event, decision, event.to, "Teleport")
         } else {
             updateRegionMembership(event.player, event.to)
         }
@@ -63,28 +65,21 @@ class MovementProtectionListener(
         lastRegions.remove(event.player.uniqueId)
     }
 
-    private fun handleBlocked(event: PlayerTeleportEvent, blocked: Blocked, attemptedLocation: Location?) {
-        val context = createContext(blocked.region, event, attemptedLocation, event.player)
-        val snapshot = ProtectionSettingsRepository.snapshot(event.player)
+    private fun <T> handleBlocked(
+        event: T,
+        blocked: Blocked,
+        attemptedLocation: Location?,
+        actionDescription: String,
+    ) where T : PlayerEvent, T : Cancellable {
+        val player = event.player
+        val context = createContext(blocked.region, event, attemptedLocation, player)
+        val snapshot = ProtectionSettingsRepository.snapshot(player)
         val deniedMessage = resolveDeniedMessage(context, blocked.flag)
         val customMessage = deniedMessage ?: snapshot.deniedEntry(resolveRegionName(blocked.region), blocked.flag.id)
         logger.debug(
-            "Teleport for {} cancelled by flag {} in region {}",
-            event.player.name,
-            blocked.flag.id,
-            blocked.region.id
-        )
-        actionExecutor.handleDenied(context, blocked.flag, blocked.evaluation, customMessage, snapshot)
-    }
-
-    private fun handleBlocked(event: PlayerMoveEvent, blocked: Blocked, attemptedLocation: Location?) {
-        val context = createContext(blocked.region, event, attemptedLocation, event.player)
-        val snapshot = ProtectionSettingsRepository.snapshot(event.player)
-        val deniedMessage = resolveDeniedMessage(context, blocked.flag)
-        val customMessage = deniedMessage ?: snapshot.deniedEntry(resolveRegionName(blocked.region), blocked.flag.id)
-        logger.debug(
-            "Movement for {} cancelled by flag {} in region {}",
-            event.player.name,
+            "{} for {} cancelled by flag {} in region {}",
+            actionDescription,
+            player.name,
             blocked.flag.id,
             blocked.region.id
         )

@@ -17,39 +17,28 @@ object SchedulerCompat {
 
     fun run(plugin: Plugin, location: Location?, task: () -> Unit) {
         if (!isFolia) {
-            Bukkit.getScheduler().runTask(plugin, Runnable(task))
+            Bukkit.getScheduler().runTask(plugin, Runnable { task() })
             return
         }
-        if (location != null) {
-            Bukkit.getRegionScheduler().run(plugin, location) { task() }
-        } else {
-            Bukkit.getGlobalRegionScheduler().run(plugin) { task() }
-        }
+        location?.let { target ->
+            Bukkit.getRegionScheduler().run(plugin, target) { task() }
+        } ?: Bukkit.getGlobalRegionScheduler().run(plugin) { task() }
     }
 
     fun runLater(plugin: Plugin, location: Location?, delayTicks: Long, task: () -> Unit): TaskHandle {
         if (!isFolia) {
-            val scheduled: BukkitTask = Bukkit.getScheduler().runTaskLater(plugin, Runnable(task), delayTicks)
-            return object : TaskHandle {
-                override fun cancel() {
-                    scheduled.cancel()
-                }
-            }
+            val scheduled: BukkitTask = Bukkit.getScheduler().runTaskLater(plugin, Runnable { task() }, delayTicks)
+            return taskHandle { scheduled.cancel() }
         }
-        return if (location != null) {
-            val scheduled: ScheduledTask = Bukkit.getRegionScheduler().runDelayed(plugin, location, { _ -> task() }, delayTicks)
-            object : TaskHandle {
-                override fun cancel() {
-                    scheduled.cancel()
-                }
-            }
-        } else {
-            val scheduled: ScheduledTask = Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { _ -> task() }, delayTicks)
-            object : TaskHandle {
-                override fun cancel() {
-                    scheduled.cancel()
-                }
-            }
-        }
+
+        val scheduled: ScheduledTask = location?.let { target ->
+            Bukkit.getRegionScheduler().runDelayed(plugin, target, { _ -> task() }, delayTicks)
+        } ?: Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { _ -> task() }, delayTicks)
+
+        return taskHandle { scheduled.cancel() }
+    }
+
+    private fun taskHandle(cancel: () -> Unit): TaskHandle = object : TaskHandle {
+        override fun cancel() = cancel()
     }
 }
