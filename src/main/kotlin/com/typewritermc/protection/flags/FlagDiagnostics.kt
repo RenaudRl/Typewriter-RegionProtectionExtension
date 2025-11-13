@@ -45,7 +45,10 @@ fun formatFlagValue(value: FlagValue): Component = when (value) {
     is FlagValue.DoubleValue -> Component.text(numberFormat.format(value.value), NamedTextColor.AQUA)
     is FlagValue.ColorValue -> Component.text(value.hex, NamedTextColor.LIGHT_PURPLE)
     is FlagValue.Text -> Component.text(truncate(value.content), NamedTextColor.WHITE)
-    is FlagValue.Commands -> Component.text(value.commands.joinToString("; "), NamedTextColor.GOLD)
+    is FlagValue.Actions -> Component.text(
+        value.actions.joinToString("; ") { it.id },
+        NamedTextColor.GOLD
+    )
     is FlagValue.ListValue -> Component.text(value.entries.joinToString(", "), NamedTextColor.GOLD)
     is FlagValue.LocationValue -> Component.text(formatPosition(value.position), NamedTextColor.BLUE)
     is FlagValue.VectorValue -> Component.text(

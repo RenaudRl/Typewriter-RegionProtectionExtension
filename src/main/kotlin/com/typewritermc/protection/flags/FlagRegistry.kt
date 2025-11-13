@@ -3,8 +3,6 @@ package com.typewritermc.protection.flags
 import com.typewritermc.core.extension.annotations.Singleton
 import com.typewritermc.protection.listener.FlagContext as ListenerFlagContext
 import com.typewritermc.protection.service.storage.RegionModel
-import com.typewritermc.protection.settings.ProtectionMessageRenderer
-import net.kyori.adventure.text.Component
 import org.bukkit.event.Event
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
@@ -54,28 +52,6 @@ class RegionFlagRegistry {
         val denyWhenFalse = FlagHandler<FlagValue.Boolean> { _, binding ->
             if (binding.value.enabled) FlagEvaluation.pass() else FlagEvaluation.deny("${binding.key.id}.denied")
         }
-        val messageHandler = FlagHandler<FlagValue.Text> { context, binding ->
-            val raw = binding.value.content.trim()
-            if (raw.isEmpty()) {
-                FlagEvaluation.pass()
-            } else {
-                val regionName = context.region.definition.name.ifBlank {
-                    context.region.artifact?.name ?: context.region.id
-                }
-                val placeholders = buildMap {
-                    put("region", regionName)
-                    put("flag", binding.key.id)
-                    context.player?.let { player ->
-                        put("player", player.name)
-                        put("player_display_name", player.displayName())
-                    }
-                }
-                val component = ProtectionMessageRenderer.render(raw, placeholders)
-                    ?: Component.text(raw)
-                FlagEvaluation.modify(mapOf("message.component" to component))
-            }
-        }
-
         listOf(
             RegionFlagKey.BUILD,
             RegionFlagKey.BLOCK_BREAK,
@@ -95,15 +71,17 @@ class RegionFlagRegistry {
 
         registerHandler(RegionFlagKey.PVP, denyWhenFalse)
 
-        registerHandler<FlagValue.LocationValue>(RegionFlagKey.TELEPORT_ON_ENTRY) { context, binding ->
-            context.runtimeData["teleport.target"] = binding.value.position
-            FlagEvaluation.modify()
+        val playerActionsHandler = FlagHandler<FlagValue.Actions> { _, binding ->
+            val actions = binding.value.actions.filter { it.isSet }
+            if (actions.isEmpty()) {
+                FlagEvaluation.pass()
+            } else {
+                FlagEvaluation.modify(mapOf("actions.player.${binding.sourceRegionId}" to actions))
+            }
         }
 
-        registerHandler(RegionFlagKey.ENTRY_MESSAGE, messageHandler)
-        registerHandler(RegionFlagKey.EXIT_MESSAGE, messageHandler)
-        registerHandler(RegionFlagKey.MESSAGE_ON_ENTRY, messageHandler)
-        registerHandler(RegionFlagKey.MESSAGE_ON_EXIT, messageHandler)
+        registerHandler(RegionFlagKey.ENTRY_ACTION, playerActionsHandler)
+        registerHandler(RegionFlagKey.EXIT_ACTION, playerActionsHandler)
     }
 
     companion object {
@@ -142,7 +120,7 @@ class RegionFlagRegistry {
             allowedValues = allowedValues,
         )
 
-        fun commandsDefinition(
+        fun actionsDefinition(
             key: RegionFlagKey,
             description: String,
             category: RegionFlagCategory,
@@ -150,9 +128,9 @@ class RegionFlagRegistry {
         ) = RegionFlagDefinition(
             key = key,
             description = description,
-            valueKind = FlagValueKind.COMMANDS,
+            valueKind = FlagValueKind.ACTIONS,
             category = category,
-            valueType = FlagValue.Commands::class,
+            valueType = FlagValue.Actions::class,
             paperCompatibility = compatibility,
         )
 
@@ -398,14 +376,14 @@ class RegionFlagRegistry {
                 RegionFlagCategory.MOVEMENT,
                 FlagEvaluationPriority.CRITICAL,
             ),
-            RegionFlagKey.ENTRY_MESSAGE to textDefinition(
-                RegionFlagKey.ENTRY_MESSAGE,
-                "Custom denial message shown when entry is blocked",
+            RegionFlagKey.ENTRY_ACTION to actionsDefinition(
+                RegionFlagKey.ENTRY_ACTION,
+                "Typewriter actions executed when entry is blocked",
                 RegionFlagCategory.MOVEMENT,
             ),
-            RegionFlagKey.EXIT_MESSAGE to textDefinition(
-                RegionFlagKey.EXIT_MESSAGE,
-                "Custom denial message shown when exit is blocked",
+            RegionFlagKey.EXIT_ACTION to actionsDefinition(
+                RegionFlagKey.EXIT_ACTION,
+                "Typewriter actions executed when exit is blocked",
                 RegionFlagCategory.MOVEMENT,
             ),
             RegionFlagKey.PASS_THROUGH to booleanDefinition(
@@ -454,24 +432,9 @@ class RegionFlagRegistry {
                 RegionFlagCategory.MOVEMENT,
                 FlagEvaluationPriority.HIGH,
             ),
-            RegionFlagKey.SPAWN_LOCATION to locationDefinition(
-                RegionFlagKey.SPAWN_LOCATION,
-                "Spawn location inside the region",
-                RegionFlagCategory.MOVEMENT,
-            ),
-            RegionFlagKey.RESPAWN_LOCATION to locationDefinition(
-                RegionFlagKey.RESPAWN_LOCATION,
-                "Respawn location after death",
-                RegionFlagCategory.MOVEMENT,
-            ),
             RegionFlagKey.BLOCKED_EFFECTS to listDefinition(
                 RegionFlagKey.BLOCKED_EFFECTS,
                 "Potion effect identifiers to remove",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.GIVE_EFFECTS to listDefinition(
-                RegionFlagKey.GIVE_EFFECTS,
-                "Potion effect payloads to apply",
                 RegionFlagCategory.MISC,
             ),
             RegionFlagKey.FLY to booleanDefinition(
@@ -548,53 +511,6 @@ class RegionFlagRegistry {
                 "Login spawn location",
                 RegionFlagCategory.MOVEMENT,
             ),
-            RegionFlagKey.TELEPORT_ON_ENTRY to locationDefinition(
-                RegionFlagKey.TELEPORT_ON_ENTRY,
-                "Teleport players when entering",
-                RegionFlagCategory.MOVEMENT,
-                FlagEvaluationPriority.HIGH,
-            ),
-            RegionFlagKey.TELEPORT_ON_EXIT to locationDefinition(
-                RegionFlagKey.TELEPORT_ON_EXIT,
-                "Teleport players when exiting",
-                RegionFlagCategory.MOVEMENT,
-                FlagEvaluationPriority.HIGH,
-            ),
-            RegionFlagKey.COMMAND_ON_ENTRY to commandsDefinition(
-                RegionFlagKey.COMMAND_ON_ENTRY,
-                "Commands executed by the player on entry",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.COMMAND_ON_EXIT to commandsDefinition(
-                RegionFlagKey.COMMAND_ON_EXIT,
-                "Commands executed by the player on exit",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.CONSOLE_COMMAND_ON_ENTRY to commandsDefinition(
-                RegionFlagKey.CONSOLE_COMMAND_ON_ENTRY,
-                "Commands executed by console on entry",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.CONSOLE_COMMAND_ON_EXIT to commandsDefinition(
-                RegionFlagKey.CONSOLE_COMMAND_ON_EXIT,
-                "Commands executed by console on exit",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.PLAY_SOUNDS to soundDefinition(
-                RegionFlagKey.PLAY_SOUNDS,
-                "Ambient sounds played inside the region",
-                RegionFlagCategory.AUDIO,
-            ),
-            RegionFlagKey.BLOCKED_ITEMS to listDefinition(
-                RegionFlagKey.BLOCKED_ITEMS,
-                "Item identifiers blocked inside the region",
-                RegionFlagCategory.INVENTORY,
-            ),
-            RegionFlagKey.GIVE_ITEMS to listDefinition(
-                RegionFlagKey.GIVE_ITEMS,
-                "Item identifiers granted to players",
-                RegionFlagCategory.INVENTORY,
-            ),
             RegionFlagKey.ENTRY_MIN_LEVEL to textDefinition(
                 RegionFlagKey.ENTRY_MIN_LEVEL,
                 "Minimum PlaceholderAPI level required to enter",
@@ -617,38 +533,6 @@ class RegionFlagRegistry {
                 "Allow WorldEdit",
                 RegionFlagCategory.MISC,
                 inheritance = FlagInheritance.OVERRIDE_ONLY,
-            ),
-            RegionFlagKey.MESSAGE_ON_ENTRY to textDefinition(
-                RegionFlagKey.MESSAGE_ON_ENTRY,
-                "Custom message shown on entry",
-                RegionFlagCategory.MOVEMENT,
-            ),
-            RegionFlagKey.MESSAGE_ON_EXIT to textDefinition(
-                RegionFlagKey.MESSAGE_ON_EXIT,
-                "Custom message shown on exit",
-                RegionFlagCategory.MOVEMENT,
-            ),
-            RegionFlagKey.INVENTORY_LOADOUT to textDefinition(
-                RegionFlagKey.INVENTORY_LOADOUT,
-                "Named inventory loadout applied inside the region",
-                RegionFlagCategory.INVENTORY,
-                PaperCompatibility.EXPERIMENTAL,
-            ),
-            RegionFlagKey.COMMAND_BLACKLIST to listDefinition(
-                RegionFlagKey.COMMAND_BLACKLIST,
-                "Commands blocked inside the region",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.COMMAND_WHITELIST to listDefinition(
-                RegionFlagKey.COMMAND_WHITELIST,
-                "Commands explicitly allowed inside the region",
-                RegionFlagCategory.MISC,
-            ),
-            RegionFlagKey.PLACEHOLDER_GATE to textDefinition(
-                RegionFlagKey.PLACEHOLDER_GATE,
-                "Placeholder expression gating access",
-                RegionFlagCategory.MISC,
-                PaperCompatibility.EXPERIMENTAL,
             ),
         )
 

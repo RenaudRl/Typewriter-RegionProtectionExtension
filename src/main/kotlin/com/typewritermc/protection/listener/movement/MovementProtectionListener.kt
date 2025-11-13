@@ -3,6 +3,7 @@ package com.typewritermc.protection.listener.movement
 import com.typewritermc.core.extension.annotations.Singleton
 import com.typewritermc.protection.events.ProtectionRegionsEnterEvent
 import com.typewritermc.protection.events.ProtectionRegionsExitEvent
+import com.typewritermc.protection.flags.FlagEvaluation
 import com.typewritermc.protection.flags.RegionFlagKey
 import com.typewritermc.protection.listener.AbstractProtectionListener
 import com.typewritermc.protection.listener.FlagActionExecutor
@@ -13,7 +14,6 @@ import com.typewritermc.protection.service.runtime.ProtectionRuntimeService
 import com.typewritermc.protection.service.storage.RegionModel
 import com.typewritermc.protection.service.storage.RegionRepository
 import com.typewritermc.protection.settings.ProtectionSettingsRepository
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -74,8 +74,11 @@ class MovementProtectionListener(
         val player = event.player
         val context = createContext(blocked.region, event, attemptedLocation, player)
         val snapshot = ProtectionSettingsRepository.snapshot(player)
-        val deniedMessage = resolveDeniedMessage(context, blocked.flag)
-        val customMessage = deniedMessage ?: snapshot.deniedEntry(resolveRegionName(blocked.region), blocked.flag.id)
+        val suppressDefault = triggerDeniedActions(context, blocked.flag)
+        val regionName = resolveRegionName(blocked.region)
+        val defaultMessage = snapshot.deniedEntry(regionName, blocked.flag.id)
+        val snapshotOverride = if (suppressDefault) snapshot.copy(showDeniedMessages = false) else snapshot
+        val customMessage = if (suppressDefault) null else defaultMessage
         logger.debug(
             "{} for {} cancelled by flag {} in region {}",
             actionDescription,
@@ -83,7 +86,7 @@ class MovementProtectionListener(
             blocked.flag.id,
             blocked.region.id
         )
-        actionExecutor.handleDenied(context, blocked.flag, blocked.evaluation, customMessage, snapshot)
+        actionExecutor.handleDenied(context, blocked.flag, blocked.evaluation, customMessage, snapshotOverride)
     }
 
     private fun updateRegionMembership(player: Player, location: Location?) {
@@ -142,12 +145,16 @@ class MovementProtectionListener(
         return region.definition.name.ifBlank { region.artifact?.name ?: region.id }
     }
 
-    private fun resolveDeniedMessage(context: FlagContext, flag: RegionFlagKey): Component? {
-        val messageFlag = when (flag) {
-            RegionFlagKey.ENTRY -> RegionFlagKey.ENTRY_MESSAGE
-            RegionFlagKey.EXIT -> RegionFlagKey.EXIT_MESSAGE
-            else -> return null
+    private fun triggerDeniedActions(context: FlagContext, flag: RegionFlagKey): Boolean {
+        val actionFlag = when (flag) {
+            RegionFlagKey.ENTRY -> RegionFlagKey.ENTRY_ACTION
+            RegionFlagKey.EXIT -> RegionFlagKey.EXIT_ACTION
+            else -> return false
         }
-        return actionExecutor.evaluateMessage(context, messageFlag)
+        val evaluation = actionExecutor.evaluate(context, actionFlag)
+        val modify = evaluation as? FlagEvaluation.Modify ?: return false
+        val messageHandled = modify.metadata["message.component"] != null || modify.metadata["message"] != null
+        actionExecutor.applyModifications(context, modify)
+        return messageHandled
     }
 }

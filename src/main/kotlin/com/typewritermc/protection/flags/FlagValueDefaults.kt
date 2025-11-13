@@ -17,7 +17,7 @@ internal fun RegionFlagDefinition.defaultFlagValue(): FlagValue {
         FlagValueKind.COLOR -> FlagValue.ColorValue()
         FlagValueKind.ENUM -> FlagValue.Text(allowedValues.firstOrNull().orEmpty())
         FlagValueKind.LIST -> FlagValue.ListValue()
-        FlagValueKind.COMMANDS -> FlagValue.Commands()
+        FlagValueKind.ACTIONS -> FlagValue.Actions()
         FlagValueKind.LOCATION -> FlagValue.LocationValue()
         FlagValueKind.VECTOR -> FlagValue.VectorValue()
         FlagValueKind.SOUND -> FlagValue.SoundValue()

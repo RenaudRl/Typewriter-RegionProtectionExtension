@@ -123,7 +123,7 @@ class ProtectionListenersIntegrationTest : FunSpec({
         val actionExecutor = FlagActionExecutor(evaluationService)
         val listener = MovementProtectionListener(repository, actionExecutor, runtimeService)
 
-        coEvery { evaluationService.evaluate(any<FlagEvaluationContext>(), RegionFlagKey.ENTRY_MESSAGE) } returns FlagEvaluation.Pass
+        coEvery { evaluationService.evaluate(any<FlagEvaluationContext>(), RegionFlagKey.ENTRY_ACTION) } returns FlagEvaluation.Pass
         val movementLogger = captureLogger("MovementProtectionListener")
         val executorLogger = captureLogger("FlagActionExecutor")
         try {

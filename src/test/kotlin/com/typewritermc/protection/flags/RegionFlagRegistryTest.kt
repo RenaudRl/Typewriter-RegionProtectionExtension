@@ -28,7 +28,7 @@ class RegionFlagRegistryTest {
 
     @Test
     fun handlerEntryValidatesType() = runTest {
-        val entry = registry.handlerEntry(RegionFlagKey.TELEPORT_ON_ENTRY)
+        val entry = registry.handlerEntry(RegionFlagKey.ENTRY_ACTION)
         assertNotNull(entry)
 
         val region = regionModel("spawn")
@@ -38,24 +38,24 @@ class RegionFlagRegistryTest {
                 event = mockk<Event>(relaxed = true),
             )
         )
-        val definition = requireNotNull(registry.definition(RegionFlagKey.TELEPORT_ON_ENTRY))
+        val definition = requireNotNull(registry.definition(RegionFlagKey.ENTRY_ACTION))
 
-        val locationBinding = ResolvedFlagBinding(
+        val actionsBinding = ResolvedFlagBinding(
             regionId = region.id,
             priority = region.priority,
-            binding = FlagBinding(RegionFlagKey.TELEPORT_ON_ENTRY, FlagValue.LocationValue()),
+            binding = FlagBinding(RegionFlagKey.ENTRY_ACTION, FlagValue.Actions()),
         )
         val booleanBinding = ResolvedFlagBinding(
             regionId = region.id,
             priority = region.priority,
-            binding = FlagBinding(RegionFlagKey.TELEPORT_ON_ENTRY, FlagValue.Boolean()),
+            binding = FlagBinding(RegionFlagKey.ENTRY_ACTION, FlagValue.Boolean()),
         )
-        assertTrue(booleanBinding.binding.value is FlagValue.LocationValue)
 
         assertNotNull(
-            entry.evaluate(context, RegionFlagKey.TELEPORT_ON_ENTRY, locationBinding, definition)
+            entry.evaluate(context, RegionFlagKey.ENTRY_ACTION, actionsBinding, definition)
         )
-        assertNotNull(entry.evaluate(context, RegionFlagKey.TELEPORT_ON_ENTRY, booleanBinding, definition))
+        assertTrue(booleanBinding.binding.value is FlagValue.Actions)
+        assertNotNull(entry.evaluate(context, RegionFlagKey.ENTRY_ACTION, booleanBinding, definition))
     }
 }
 

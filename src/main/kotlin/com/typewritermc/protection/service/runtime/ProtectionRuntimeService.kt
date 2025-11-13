@@ -50,11 +50,10 @@ class ProtectionRuntimeService(
                 else -> Unit
             }
             if (entryResult !is FlagEvaluation.Denied) {
-                applyMessageFlag(context, RegionFlagKey.MESSAGE_ON_ENTRY)
-            }
-            when (val teleport = actionExecutor.evaluate(context, RegionFlagKey.TELEPORT_ON_ENTRY)) {
-                is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, teleport)
-                else -> Unit
+                when (val entryActions = actionExecutor.evaluate(context, RegionFlagKey.ENTRY_ACTION)) {
+                    is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, entryActions)
+                    else -> Unit
+                }
             }
         }
 
@@ -76,21 +75,13 @@ class ProtectionRuntimeService(
                 else -> Unit
             }
             if (exitResult !is FlagEvaluation.Denied) {
-                applyMessageFlag(context, RegionFlagKey.MESSAGE_ON_EXIT)
-            }
-            when (val teleport = actionExecutor.evaluate(context, RegionFlagKey.TELEPORT_ON_EXIT)) {
-                is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, teleport)
-                else -> Unit
+                when (val exitActions = actionExecutor.evaluate(context, RegionFlagKey.EXIT_ACTION)) {
+                    is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, exitActions)
+                    else -> Unit
+                }
             }
         }
 
         return EntryDecision.Allowed
 }
-
-    private fun applyMessageFlag(context: FlagContext, key: RegionFlagKey) {
-        when (val result = actionExecutor.evaluate(context, key)) {
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, result)
-            else -> Unit
-        }
-    }
 }

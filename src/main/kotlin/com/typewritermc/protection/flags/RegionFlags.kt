@@ -6,7 +6,9 @@ import com.typewritermc.core.extension.annotations.ContentEditor
 import com.typewritermc.core.extension.annotations.Help
 import com.typewritermc.core.extension.annotations.MultiLine
 import com.typewritermc.core.extension.annotations.Placeholder
+import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.utils.point.Position
+import com.typewritermc.engine.paper.entry.entries.ActionEntry
 import com.typewritermc.engine.paper.content.modes.custom.PositionContentMode
 import kotlin.reflect.KClass
 
@@ -44,8 +46,8 @@ enum class RegionFlagKey(val id: String) {
     ITEM_DROP("item-drop"),
     ENTRY("entry"),
     EXIT("exit"),
-    ENTRY_MESSAGE("entry-deny-message"),
-    EXIT_MESSAGE("exit-deny-message"),
+    ENTRY_ACTION("entry-deny-action"),
+    EXIT_ACTION("exit-deny-action"),
     PASS_THROUGH("passthrough"),
     INVINCIBLE("invincible"),
     FALL_DAMAGE("fall-damage"),
@@ -55,10 +57,7 @@ enum class RegionFlagKey(val id: String) {
     HEAL_MIN("heal-min-health"),
     HEAL_MAX("heal-max-health"),
     TELEPORT("teleport"),
-    SPAWN_LOCATION("spawn-location"),
-    RESPAWN_LOCATION("respawn-location"),
     BLOCKED_EFFECTS("blocked-effects"),
-    GIVE_EFFECTS("give-effects"),
     FLY("fly"),
     WALK_SPEED("walk-speed"),
     FLY_SPEED("fly-speed"),
@@ -73,25 +72,10 @@ enum class RegionFlagKey(val id: String) {
     CHUNK_UNLOAD("chunk-unload"),
     ITEM_DURABILITY("item-durability"),
     JOIN_LOCATION("join-location"),
-    TELEPORT_ON_ENTRY("teleport-on-entry"),
-    TELEPORT_ON_EXIT("teleport-on-exit"),
-    COMMAND_ON_ENTRY("command-on-entry"),
-    COMMAND_ON_EXIT("command-on-exit"),
-    CONSOLE_COMMAND_ON_ENTRY("console-command-on-entry"),
-    CONSOLE_COMMAND_ON_EXIT("console-command-on-exit"),
-    PLAY_SOUNDS("play-sounds"),
-    BLOCKED_ITEMS("blocked-items"),
-    GIVE_ITEMS("give-items"),
     ENTRY_MIN_LEVEL("entry-min-level"),
     ENTRY_MAX_LEVEL("entry-max-level"),
     PERMIT_COMPLETELY("permit-completely"),
-    WORLD_EDIT("worldedit"),
-    MESSAGE_ON_ENTRY("message-on-entry"),
-    MESSAGE_ON_EXIT("message-on-exit"),
-    INVENTORY_LOADOUT("inventory-loadout"),
-    COMMAND_BLACKLIST("command-blacklist"),
-    COMMAND_WHITELIST("command-whitelist"),
-    PLACEHOLDER_GATE("placeholder-gate")
+    WORLD_EDIT("worldedit")
 }
 
 enum class RegionFlagCategory {
@@ -113,7 +97,7 @@ enum class FlagValueKind {
     COLOR,
     ENUM,
     LIST,
-    COMMANDS,
+    ACTIONS,
     LOCATION,
     VECTOR,
     SOUND,
@@ -189,10 +173,10 @@ sealed interface FlagValue {
         val content: String = "",
     ) : FlagValue
 
-    @AlgebraicTypeInfo("flag_value_commands", Colors.ORANGE, "mdi:console")
-    data class Commands(
-        @field:Help("List of commands executed sequentially")
-        val commands: List<String> = emptyList(),
+    @AlgebraicTypeInfo("flag_value_actions", Colors.ORANGE, "mdi:play")
+    data class Actions(
+        @field:Help("Typewriter action entries executed sequentially")
+        val actions: List<Ref<ActionEntry>> = emptyList(),
     ) : FlagValue
 
     @AlgebraicTypeInfo("flag_value_list", Colors.CYAN, "mdi:format-list-bulleted")
