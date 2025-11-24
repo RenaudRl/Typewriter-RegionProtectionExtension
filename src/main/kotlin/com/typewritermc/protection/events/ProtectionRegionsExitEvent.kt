@@ -32,3 +32,4 @@ class ProtectionRegionsExitEvent(
         fun getHandlerList(): HandlerList = HANDLER_LIST
     }
 }
+

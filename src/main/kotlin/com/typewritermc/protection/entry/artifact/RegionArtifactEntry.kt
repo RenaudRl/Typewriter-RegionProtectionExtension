@@ -29,3 +29,4 @@ private fun String.sanitizedForPath(): String {
     val sanitized = replace(Regex("[\\\\/:*?\"<>|]"), "_")
     return sanitized.ifBlank { this }
 }
+

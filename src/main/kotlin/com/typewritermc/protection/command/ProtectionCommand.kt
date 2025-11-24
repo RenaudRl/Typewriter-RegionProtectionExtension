@@ -359,3 +359,4 @@ private sealed interface TeleportTargetResult {
     data class WorldMissing(val world: String) : TeleportTargetResult
     object Unavailable : TeleportTargetResult
 }
+

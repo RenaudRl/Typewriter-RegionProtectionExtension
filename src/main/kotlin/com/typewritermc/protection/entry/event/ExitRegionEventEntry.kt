@@ -39,3 +39,4 @@ fun onExitProtectionRegions(
         region == null || event.contains(region)
     }.triggerAllFor(event.player, context())
 }
+

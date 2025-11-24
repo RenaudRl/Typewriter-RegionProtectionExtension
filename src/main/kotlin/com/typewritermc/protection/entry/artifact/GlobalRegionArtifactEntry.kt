@@ -16,7 +16,7 @@ import java.util.Locale
 class GlobalRegionArtifactEntry(
     id: String = "",
     name: String = "",
-    artifactId: String = "typewritermc:global_protection_region",
+    artifactId: String = "",
     @Help("World identifiers covered by this region")
     val worlds: List<String> = emptyList(),
     @Help("Minimum height included in the region")
@@ -28,9 +28,6 @@ class GlobalRegionArtifactEntry(
     name = name,
     artifactId = artifactId,
 ) {
-    override val path: String
-        get() = "artifacts/${artifactId.replace(':', '/')}.${extension}"
-
     internal fun resolvedWorlds(): List<String> {
         if (worlds.isEmpty()) return emptyList()
         val collected = linkedMapOf<String, String>()
@@ -43,3 +40,4 @@ class GlobalRegionArtifactEntry(
         return collected.values.toList()
     }
 }
+

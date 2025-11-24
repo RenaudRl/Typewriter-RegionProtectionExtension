@@ -627,3 +627,4 @@ internal class HandlerEntry<T : FlagValue>(
         return HandlerResult(evaluation, typedBinding)
     }
 }
+

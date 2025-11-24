@@ -8,3 +8,4 @@ sealed interface EntryDecision {
     data object Allowed : EntryDecision
     data class Blocked(val region: RegionModel, val flag: RegionFlagKey, val evaluation: FlagEvaluation.Denied) : EntryDecision
 }
+

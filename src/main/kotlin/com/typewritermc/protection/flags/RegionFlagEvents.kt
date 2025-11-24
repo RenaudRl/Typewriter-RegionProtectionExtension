@@ -42,3 +42,4 @@ class RegionFlagDenyEvent(
         fun getHandlerList(): HandlerList = handlerList
     }
 }
+

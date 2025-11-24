@@ -209,3 +209,4 @@ private fun installLogAppender(loggerName: String): ListAppender<ILoggingEvent> 
     logger.addAppender(appender)
     return appender
 }
+

@@ -25,3 +25,4 @@ internal fun RegionFlagDefinition.defaultFlagValue(): FlagValue {
         FlagValueKind.NONE -> FlagValue.Text("")
     }
 }
+

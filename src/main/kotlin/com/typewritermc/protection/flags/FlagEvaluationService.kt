@@ -21,6 +21,10 @@ class FlagEvaluationService(
     private val regionRepository: RegionRepository,
     private val registry: RegionFlagRegistry,
 ) {
+    init {
+        Companion.instance = this
+    }
+
     private val logger = LoggerFactory.getLogger("FlagEvaluationService")
     private val bindingCache = ConcurrentHashMap<String, Map<RegionFlagKey, List<ResolvedFlagBinding>>>()
     private val updateFlow = MutableSharedFlow<FlagUpdateEvent>(
@@ -160,6 +164,19 @@ class FlagEvaluationService(
             logger.trace("Skipping {} publication: {}", event.eventName, ignored.message)
         }
     }
+
+    companion object {
+        @Volatile
+        private var instance: FlagEvaluationService? = null
+
+        /**
+         * Allows external callers (e.g. RegionRepository) to trigger a cache flush without
+         * re-entering Koin resolution and causing a circular dependency during startup.
+         */
+        fun invalidateAllIfReady() {
+            instance?.invalidateAll()
+        }
+    }
 }
 
 internal data class ResolvedFlagBinding(
@@ -175,3 +192,4 @@ sealed interface FlagUpdateEvent {
     data object All : FlagUpdateEvent
     data class Region(val regionId: String) : FlagUpdateEvent
 }
+

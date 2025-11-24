@@ -548,3 +548,4 @@ class ProtectionMessageTemplates(
         return normalized
     }
 }
+

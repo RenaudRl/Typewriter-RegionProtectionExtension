@@ -273,3 +273,4 @@ class FlagActionExecutor(
         return component ?: text?.let { Component.text(it, NamedTextColor.GOLD) }
     }
 }
+

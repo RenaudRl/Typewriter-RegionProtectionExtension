@@ -32,3 +32,4 @@ class ProtectionRegionsEnterEvent(
         fun getHandlerList(): HandlerList = HANDLER_LIST
     }
 }
+

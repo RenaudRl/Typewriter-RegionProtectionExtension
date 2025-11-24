@@ -247,3 +247,4 @@ private fun PlayerMock.pollNextComponentMessage(): Component? {
         queue?.poll() as? Component
     }.getOrNull()
 }
+

@@ -119,3 +119,4 @@ data class FlagResolution(
     val blockedByInheritance: Boolean
         get() = !isEffective && history.isNotEmpty() && (definition?.inheritance == FlagInheritance.OVERRIDE_ONLY || definition?.inheritance == FlagInheritance.NEVER)
 }
+

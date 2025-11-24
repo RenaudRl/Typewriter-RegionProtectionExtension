@@ -46,3 +46,4 @@ class ProtectionMessagesTest : FunSpec({
         plain.serialize(rendered!!) shouldBe "• build = true (spawn)"
     }
 })
+

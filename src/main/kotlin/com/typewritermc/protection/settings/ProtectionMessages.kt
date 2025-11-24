@@ -188,3 +188,4 @@ object ProtectionMessageRenderer {
         return render(template, placeholders)?.let { plainSerializer.serialize(it) }
     }
 }
+

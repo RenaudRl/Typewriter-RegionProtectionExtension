@@ -7,3 +7,4 @@ fun GlobalRegionArtifactEntry.toRegionShape(): GlobalRegionShape = GlobalRegionS
     minY = minY,
     maxY = maxY,
 )
+

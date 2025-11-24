@@ -59,3 +59,4 @@ private class CompatEntryArgumentType<E : Entry>(
         return builder.buildFuture()
     }
 }
+

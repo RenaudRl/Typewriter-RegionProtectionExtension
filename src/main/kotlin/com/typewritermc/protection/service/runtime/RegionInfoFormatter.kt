@@ -205,3 +205,4 @@ internal object RegionInfoFormatter {
 
     private fun formatNumber(value: Double): String = numberFormat.format(value)
 }
+

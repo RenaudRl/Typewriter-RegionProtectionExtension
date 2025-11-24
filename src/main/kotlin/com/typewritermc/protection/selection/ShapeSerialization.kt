@@ -76,3 +76,4 @@ fun SerializedShape?.toRegionShape(fallback: RegionShape): RegionShape {
         )
     }
 }
+

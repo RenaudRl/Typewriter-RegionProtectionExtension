@@ -88,7 +88,7 @@ object ProtectionInitializer : Initializable {
             return
         }
         if (mythicMobsListener != null) return
-        val listener = try {
+        val listener: MythicMobsSpawnProtectionListener = try {
             KoinJavaComponent.get(MythicMobsSpawnProtectionListener::class.java)
         } catch (error: Throwable) {
             logger.warn("Failed to initialize MythicMobs mob spawning integration", error)
@@ -106,3 +106,4 @@ object ProtectionInitializer : Initializable {
         logger.info("MythicMobs mob spawning integration disabled")
     }
 }
+

@@ -20,7 +20,6 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
-import org.koin.java.KoinJavaComponent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -188,16 +187,7 @@ class RegionRepository {
     }
 
     private fun notifyFlagGraphReloaded() {
-        val service: FlagEvaluationService? = try {
-            KoinJavaComponent.get(FlagEvaluationService::class.java)
-        } catch (ignored: Exception) {
-            null
-        }
-        if (service == null) {
-            logger.debug("FlagEvaluationService not available during repository reload")
-        } else {
-            service.invalidateAll()
-        }
+        FlagEvaluationService.invalidateAllIfReady()
     }
 
     private fun scheduleLoadLog(size: Int) {
@@ -344,3 +334,4 @@ data class RegionModel(
     val id: String get() = regionId
     val bounds: Pair<Position, Position> get() = shape.min() to shape.max()
 }
+

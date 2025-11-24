@@ -113,3 +113,4 @@ data class ProtectionMessageSettings(
     @Help("Indicator appended to boss bar flag details when overriding a parent value.")
     val inspectionBossBarDetailOverrideIndicator: String = "<light_purple>↻</light_purple>",
 )
+

@@ -611,3 +611,4 @@ private fun artifactKey(artifact: RegionArtifactEntry): String =
     artifact.artifactId.takeIf { it.isNotBlank() } ?: artifact.id
 
 private fun Double.format(): String = String.format("%.2f", this)
+

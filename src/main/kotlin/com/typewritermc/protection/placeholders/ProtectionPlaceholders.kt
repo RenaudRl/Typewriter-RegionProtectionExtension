@@ -247,3 +247,4 @@ class ProtectionPlaceholders(
         return repository.all().firstOrNull { it.regionId.equals(id, ignoreCase = true) }
     }
 }
+

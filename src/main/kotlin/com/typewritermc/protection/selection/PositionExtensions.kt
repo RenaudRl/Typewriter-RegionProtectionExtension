@@ -14,3 +14,4 @@ fun Position.toBukkitLocation(): Location {
     val bukkitWorld = Bukkit.getWorld(world.identifier)
     return Location(bukkitWorld, x, y, z, yaw, pitch)
 }
+

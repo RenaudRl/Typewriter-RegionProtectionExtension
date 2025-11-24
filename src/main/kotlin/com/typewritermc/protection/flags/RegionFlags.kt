@@ -215,27 +215,23 @@ sealed interface FlagValue {
 }
 
 class FlagBinding(
-    key: RegionFlagKey = RegionFlagKey.BUILD,
-    value: FlagValue = key.defaultFlagValue(),
+    key: RegionFlagKey? = RegionFlagKey.BUILD,
+    value: FlagValue = (key ?: RegionFlagKey.BUILD).defaultFlagValue(),
 ) {
-    var key: RegionFlagKey = key
+    var key: RegionFlagKey = sanitizeKey(key)
         set(value) {
-            if (field == value) {
+            val sanitized = sanitizeKey(value)
+            if (field == sanitized) {
                 return
             }
-            field = value
-            this.value = value.defaultFlagValue()
+            field = sanitized
+            this.value = sanitized.defaultFlagValue()
         }
 
     var value: FlagValue = value.ensureCompatible(this.key)
         set(value) {
             field = value.ensureCompatible(this.key)
         }
-
-    init {
-        this.key = key
-        this.value = value
-    }
 
     fun copy(key: RegionFlagKey = this.key, value: FlagValue = this.value): FlagBinding {
         return FlagBinding(key, value)
@@ -267,3 +263,8 @@ private fun FlagValue.ensureCompatible(key: RegionFlagKey): FlagValue {
     val expected = definition.defaultFlagValue()
     return if (expected::class == this::class) this else expected
 }
+
+private fun sanitizeKey(key: RegionFlagKey?): RegionFlagKey {
+    return key ?: RegionFlagKey.BUILD
+}
+

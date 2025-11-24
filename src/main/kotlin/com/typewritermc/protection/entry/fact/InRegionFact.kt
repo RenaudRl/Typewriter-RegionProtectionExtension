@@ -39,3 +39,4 @@ class InRegionFact(
         return FactData(value)
     }
 }
+
