@@ -11,6 +11,11 @@ import java.util.Locale
 import kotlin.math.max
 import kotlin.math.min
 
+/** Compares two worlds by identifier (case-insensitive). */
+private fun isSameWorld(a: World, b: World): Boolean {
+    return a.identifier.equals(b.identifier, ignoreCase = true)
+}
+
 /** Represents the geometric dimension used for region selections. */
 enum class SelectionDimension { TWO_D, THREE_D }
 
@@ -46,6 +51,7 @@ data class CuboidShape(
     private val maxZ = max(corner1.z, corner2.z)
 
     override fun contains(position: Position): Boolean {
+        if (!isSameWorld(position.world, corner1.world)) return false
         return position.x in minX..maxX &&
             position.y in minY..maxY &&
             position.z in minZ..maxZ
@@ -70,6 +76,8 @@ data class PolygonPrismShape(
     override val dimension: SelectionDimension = SelectionDimension.THREE_D
 
     override fun contains(position: Position): Boolean {
+        if (vertices.isEmpty()) return false
+        if (!isSameWorld(position.world, vertices.first().world)) return false
         if (position.y < minY || position.y > maxY) return false
         if (vertices.size < 3) return false
         return isInsidePolygon(position)
@@ -120,6 +128,7 @@ data class CylinderShape(
     override val dimension: SelectionDimension = SelectionDimension.THREE_D
 
     override fun contains(position: Position): Boolean {
+        if (!isSameWorld(position.world, center.world)) return false
         if (position.y < minY || position.y > maxY) return false
         val dx = position.x - center.x
         val dz = position.z - center.z
@@ -144,6 +153,7 @@ data class FlatPolygonShape(
 
     override fun contains(position: Position): Boolean {
         if (vertices.size < 3) return false
+        if (!isSameWorld(position.world, vertices.first().world)) return false
         return position.y == y && PolygonPrismShape(y, y, vertices).contains(position)
     }
 
