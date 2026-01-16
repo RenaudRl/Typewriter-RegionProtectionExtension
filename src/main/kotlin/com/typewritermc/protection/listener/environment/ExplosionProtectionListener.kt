@@ -37,13 +37,9 @@ class ExplosionProtectionListener(
             logger.debug("Ignoring explosion from {} at {} (no matching flag)", event.entity?.type, event.location)
             return
         }
-        val region = dominantRegion(event.location)
-        if (region == null) {
-            logger.debug("No region matched explosion at {}", event.location)
-            return
-        }
-        val context = createContext(region, event, event.location, source = event.entity)
-        handleExplosion(context, flag) {
+
+        val (evaluation, context) = evaluateFlag(flag, event, event.location, source = event.entity)
+        handleExplosion(evaluation, context, flag) {
             event.isCancelled = true
             event.blockList().clear()
         }
@@ -51,13 +47,8 @@ class ExplosionProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onBlockExplode(event: BlockExplodeEvent) {
-        val region = dominantRegion(event.block.location)
-        if (region == null) {
-            logger.debug("No region matched block explosion at {}", event.block.location)
-            return
-        }
-        val context = createContext(region, event, event.block.location)
-        handleExplosion(context, RegionFlagKey.TNT) {
+        val (evaluation, context) = evaluateFlag(RegionFlagKey.TNT, event, event.block.location)
+        handleExplosion(evaluation, context, RegionFlagKey.TNT) {
             event.isCancelled = true
             event.blockList().clear()
         }
@@ -70,24 +61,27 @@ class ExplosionProtectionListener(
             logger.debug("Ignoring explosion prime from {} at {} (no matching flag)", event.entity?.type, event.entity?.location)
             return
         }
-        val region = dominantRegion(event.entity?.location)
-        if (region == null) {
-            logger.debug("No region matched priming entity {} at {}", event.entity?.type, event.entity?.location)
-            return
-        }
-        val context = createContext(region, event, event.entity?.location, source = event.entity)
-        handleExplosion(context, flag) {
+        
+        val (evaluation, context) = evaluateFlag(flag, event, event.entity?.location, source = event.entity)
+        handleExplosion(evaluation, context, flag) {
             event.isCancelled = true
         }
     }
 
-    private fun handleExplosion(context: FlagContext, flag: RegionFlagKey, cancel: () -> Unit) {
-        when (val result = actionExecutor.evaluate(context, flag)) {
+    private fun handleExplosion(
+        evaluation: FlagEvaluation,
+        context: FlagContext?,
+        flag: RegionFlagKey,
+        cancel: () -> Unit
+    ) {
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 cancel()
-                actionExecutor.handleDenied(context, flag, result)
+                if (context != null) actionExecutor.handleDenied(context, flag, evaluation)
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, result)
+            is FlagEvaluation.Modify -> {
+                if (context != null) actionExecutor.applyModifications(context, evaluation)
+            }
             else -> Unit
         }
     }

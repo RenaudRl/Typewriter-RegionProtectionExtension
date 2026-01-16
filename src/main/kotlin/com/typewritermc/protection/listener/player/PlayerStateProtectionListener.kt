@@ -25,15 +25,13 @@ class PlayerStateProtectionListener(
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onFoodChange(event: FoodLevelChangeEvent) {
         val player = event.entity as? org.bukkit.entity.Player ?: return
-        val region = dominantRegion(player.location) ?: return
-        val context = createContext(region, event, player.location, player)
-
+        
         // HUNGER flag: Deny means disable hunger loss.
         // So if new level < old level (loss), cancel.
         if (event.foodLevel < player.foodLevel) {
-            when (actionExecutor.evaluate(context, RegionFlagKey.HUNGER)) {
-                is FlagEvaluation.Denied -> event.isCancelled = true
-                else -> {}
+            val (evaluation, _) = evaluateFlag(RegionFlagKey.HUNGER, event, player.location, player)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
             }
         }
     }
@@ -41,10 +39,9 @@ class PlayerStateProtectionListener(
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onPlayerDeath(event: PlayerDeathEvent) {
         val player = event.entity
-        val region = dominantRegion(player.location) ?: return
-        val context = createContext(region, event, player.location, player)
+        val (invEvaluation, _) = evaluateFlag(RegionFlagKey.KEEP_INVENTORY, event, player.location, player)
 
-        when (actionExecutor.evaluate(context, RegionFlagKey.KEEP_INVENTORY)) {
+        when (invEvaluation) {
             is FlagEvaluation.Allow, is FlagEvaluation.Modify -> {
                 event.keepInventory = true
                 event.drops.clear()
@@ -52,7 +49,8 @@ class PlayerStateProtectionListener(
             else -> {}
         }
 
-        when (actionExecutor.evaluate(context, RegionFlagKey.KEEP_EXP)) {
+        val (expEvaluation, _) = evaluateFlag(RegionFlagKey.KEEP_EXP, event, player.location, player)
+        when (expEvaluation) {
              is FlagEvaluation.Allow, is FlagEvaluation.Modify -> {
                  event.keepLevel = true
                  event.droppedExp = 0
@@ -63,12 +61,9 @@ class PlayerStateProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onItemDamage(event: PlayerItemDamageEvent) {
-        val region = dominantRegion(event.player.location) ?: return
-        val context = createContext(region, event, event.player.location, event.player)
-
-        when (actionExecutor.evaluate(context, RegionFlagKey.ITEM_DURABILITY)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.ITEM_DURABILITY, event, event.player.location, event.player)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 

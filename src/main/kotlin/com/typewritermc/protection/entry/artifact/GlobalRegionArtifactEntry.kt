@@ -5,6 +5,7 @@ import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Help
 import com.typewritermc.core.extension.annotations.Tags
 import java.util.Locale
+import java.util.UUID
 
 @Tags("protection_region", "protection_region_global")
 @Entry(
@@ -16,7 +17,7 @@ import java.util.Locale
 class GlobalRegionArtifactEntry(
     id: String = "",
     name: String = "",
-    artifactId: String = "",
+    artifactId: String = UUID.randomUUID().toString(),
     @Help("World identifiers covered by this region")
     val worlds: List<String> = emptyList(),
     @Help("Minimum height included in the region")

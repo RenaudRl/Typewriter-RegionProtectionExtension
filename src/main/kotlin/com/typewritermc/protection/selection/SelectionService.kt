@@ -16,6 +16,7 @@ import com.typewritermc.protection.selection.GlobalRegionShape
 import com.typewritermc.protection.settings.ProtectionMessageRenderer
 import com.typewritermc.protection.settings.ProtectionMessages
 import com.typewritermc.protection.settings.ProtectionSettingsRepository
+import com.typewritermc.protection.listener.SchedulerCompat
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
@@ -323,9 +324,14 @@ private class SelectionSession(
         builder = { node -> decorateNode(node) }
     )
     private val visualizer = SelectionVisualizer(plugin, player)
-    private val task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+    private val task = SchedulerCompat.runTimer(plugin, player.location, 10L, 10L) {
         runBlocking { component.tick(player) }
-    }, 10L, 10L)
+    }
+    // Maintain a reference to cancel it later, wrapping it isn't strictly necessary if we store the handle directly
+    // but the class closes via task.cancel()
+    
+    // We need to change the type of 'task' in the class property or adapt usage.
+    // The previous 'task' was BukkitTask. Let's change usage to use SchedulerCompat.TaskHandle instead.
 
     val pointCount: Int
         get() = points.size

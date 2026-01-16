@@ -204,7 +204,7 @@ class RegionRepository {
         private data class PendingLoadLog(
             val message: String,
             var occurrences: Int,
-            var task: BukkitTask?,
+            var task: com.typewritermc.protection.listener.SchedulerCompat.TaskHandle?,
         )
 
         private fun enqueueLoadLog(message: String) {
@@ -245,10 +245,10 @@ class RegionRepository {
             }
         }
 
-        private fun scheduleLog(plugin: Plugin): BukkitTask {
-            return Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+        private fun scheduleLog(plugin: Plugin): com.typewritermc.protection.listener.SchedulerCompat.TaskHandle {
+            return com.typewritermc.protection.listener.SchedulerCompat.runLater(plugin, null, 5L) {
                 flushPendingLog()
-            }, 5L)
+            }
         }
 
         private fun flushPendingLog() {

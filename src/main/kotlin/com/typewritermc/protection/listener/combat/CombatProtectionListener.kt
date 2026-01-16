@@ -31,21 +31,16 @@ class CombatProtectionListener(
     }
 
     private fun handleAttacker(event: EntityDamageByEntityEvent, attacker: Player): Boolean {
-        val region = dominantRegion(attacker.location)
-        if (region == null) {
-            logger.debug("No region matched attacker {} at {}", attacker.name, attacker.location)
-            return true
-        }
-        val context = createContext(region, event, attacker.location, attacker, source = attacker, target = event.entity)
-        return when (val result = actionExecutor.evaluate(context, RegionFlagKey.PVP)) {
+        val (evaluation, context) = evaluateFlag(RegionFlagKey.PVP, event, attacker.location, attacker, source = attacker, target = event.entity)
+        return when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.PVP, result)
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.PVP, evaluation)
                 false
             }
             is FlagEvaluation.Modify -> {
-                applyDamageModification(event, result)
-                actionExecutor.applyModifications(context, result)
+                applyDamageModification(event, evaluation)
+                if (context != null) actionExecutor.applyModifications(context, evaluation)
                 true
             }
             else -> true
@@ -53,20 +48,16 @@ class CombatProtectionListener(
     }
 
     private fun handleVictim(event: EntityDamageByEntityEvent, victim: Player) {
-        val region = dominantRegion(victim.location)
-        if (region == null) {
-            logger.debug("No region matched victim {} at {}", victim.name, victim.location)
-            return
-        }
-        val context = createContext(region, event, victim.location, victim, source = event.damager, target = victim)
-        when (val result = actionExecutor.evaluate(context, RegionFlagKey.MOB_DAMAGE)) {
+        val (evaluation, context) = evaluateFlag(RegionFlagKey.MOB_DAMAGE, event, victim.location, victim, source = event.damager, target = victim)
+        
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.MOB_DAMAGE, result)
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.MOB_DAMAGE, evaluation)
             }
             is FlagEvaluation.Modify -> {
-                applyDamageModification(event, result)
-                actionExecutor.applyModifications(context, result)
+                applyDamageModification(event, evaluation)
+                if (context != null) actionExecutor.applyModifications(context, evaluation)
             }
             else -> Unit
         }

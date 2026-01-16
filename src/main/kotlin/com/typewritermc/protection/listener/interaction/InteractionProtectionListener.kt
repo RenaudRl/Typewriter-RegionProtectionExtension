@@ -26,51 +26,48 @@ class InteractionProtectionListener(
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onInteract(event: PlayerInteractEvent) {
         val location = event.interactionPoint ?: event.clickedBlock?.location ?: event.player.location
-        val region = dominantRegion(location) ?: return
-        
-        val context = createContext(region, event, location, event.player, source = event.player)
+        val player = event.player
         
         // Check for VEHICLE_PLACE
         if (event.action == Action.RIGHT_CLICK_BLOCK && event.item != null) {
             val type = event.item!!.type
             if (type.name.contains("MINECART") || type.name.contains("BOAT") || type.name.contains("RAFT")) {
-                 when (val result = actionExecutor.evaluate(context, RegionFlagKey.VEHICLE_PLACE)) {
-                    is FlagEvaluation.Denied -> {
-                        event.isCancelled = true
-                        actionExecutor.handleDenied(context, RegionFlagKey.VEHICLE_PLACE, result)
-                        return
-                    }
-                    else -> {}
+                 val (evaluation, context) = evaluateFlag(RegionFlagKey.VEHICLE_PLACE, event, location, player, source = player)
+                 if (evaluation is FlagEvaluation.Denied) {
+                    event.isCancelled = true
+                    if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.VEHICLE_PLACE, evaluation)
+                    return
                  }
             }
         }
 
         // Check for USE
         if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null && isUseInteraction(event.clickedBlock!!.type)) {
-             when (val result = actionExecutor.evaluate(context, RegionFlagKey.USE)) {
-                is FlagEvaluation.Denied -> {
-                    event.isCancelled = true
-                    actionExecutor.handleDenied(context, RegionFlagKey.USE, result)
-                    return
-                }
-                else -> {}
+             val (evaluation, context) = evaluateFlag(RegionFlagKey.USE, event, location, player, source = player)
+             if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.USE, evaluation)
+                return
              }
         }
         
         // Fallback to generic INTERACT
-        when (val result = actionExecutor.evaluate(context, RegionFlagKey.INTERACT)) {
+        val (evaluation, context) = evaluateFlag(RegionFlagKey.INTERACT, event, location, player, source = player)
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.INTERACT, result)
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.INTERACT, evaluation)
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, result)
+            is FlagEvaluation.Modify -> {
+                if (context != null) actionExecutor.applyModifications(context, evaluation)
+            }
             else -> Unit
         }
     }
     
     private fun isUseInteraction(type: Material): Boolean {
-        return type.isInteractable || 
-               type.name.contains("DOOR") || 
+        // Explicit list of interactable blocks (deprecated isInteractable removed)
+        return type.name.contains("DOOR") || 
                type.name.contains("BUTTON") || 
                type.name.contains("LEVER") ||
                type.name.contains("GATE") ||
@@ -78,6 +75,8 @@ class InteractionProtectionListener(
                type.name.contains("CHEST") ||
                type.name.contains("BARREL") || 
                type.name.contains("SHULKER") ||
+               type.name.contains("BED") ||
+               type.name.contains("SIGN") ||
                type == Material.REPEATER || 
                type == Material.COMPARATOR ||
                type == Material.HOPPER ||
@@ -96,41 +95,45 @@ class InteractionProtectionListener(
                type == Material.NOTE_BLOCK ||
                type == Material.JUKEBOX ||
                type == Material.COMMAND_BLOCK || 
-               type == Material.DAYLIGHT_DETECTOR
+               type == Material.DAYLIGHT_DETECTOR ||
+               type == Material.LECTERN ||
+               type == Material.BELL ||
+               type == Material.LOOM ||
+               type == Material.GRINDSTONE ||
+               type == Material.STONECUTTER ||
+               type == Material.CARTOGRAPHY_TABLE ||
+               type == Material.SMITHING_TABLE ||
+               type == Material.CRAFTING_TABLE ||
+               type == Material.RESPAWN_ANCHOR ||
+               type == Material.LODESTONE
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onDrop(event: PlayerDropItemEvent) {
-        val region = dominantRegion(event.player.location)
-        if (region == null) {
-            logger.debug("No region matched item drop at {}", event.player.location)
-            return
-        }
-        val context = createContext(region, event, event.player.location, event.player, source = event.player)
-        when (val result = actionExecutor.evaluate(context, RegionFlagKey.ITEM_DROP)) {
+        val (evaluation, context) = evaluateFlag(RegionFlagKey.ITEM_DROP, event, event.player.location, event.player, source = event.player)
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.ITEM_DROP, result)
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.ITEM_DROP, evaluation)
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, result)
+            is FlagEvaluation.Modify -> {
+                if (context != null) actionExecutor.applyModifications(context, evaluation)
+            }
             else -> Unit
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onPickup(event: PlayerAttemptPickupItemEvent) {
-        val region = dominantRegion(event.player.location)
-        if (region == null) {
-            logger.debug("No region matched item pickup at {}", event.player.location)
-            return
-        }
-        val context = createContext(region, event, event.player.location, event.player, source = event.player)
-        when (val result = actionExecutor.evaluate(context, RegionFlagKey.ITEM_PICKUP)) {
+        val (evaluation, context) = evaluateFlag(RegionFlagKey.ITEM_PICKUP, event, event.player.location, event.player, source = event.player)
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.ITEM_PICKUP, result)
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.ITEM_PICKUP, evaluation)
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, result)
+            is FlagEvaluation.Modify -> {
+                if (context != null) actionExecutor.applyModifications(context, evaluation)
+            }
             else -> Unit
         }
     }

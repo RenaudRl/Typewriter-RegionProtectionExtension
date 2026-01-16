@@ -75,7 +75,8 @@ enum class RegionFlagKey(val id: String) {
     ENTRY_MIN_LEVEL("entry-min-level"),
     ENTRY_MAX_LEVEL("entry-max-level"),
     PERMIT_COMPLETELY("permit-completely"),
-    WORLD_EDIT("worldedit")
+    WORLD_EDIT("worldedit"),
+    BIOME("biome")
 }
 
 enum class RegionFlagCategory {
@@ -86,7 +87,8 @@ enum class RegionFlagCategory {
     INVENTORY,
     CHAT,
     AUDIO,
-    MISC
+    MISC,
+    ENVIRONMENT
 }
 
 enum class FlagValueKind {

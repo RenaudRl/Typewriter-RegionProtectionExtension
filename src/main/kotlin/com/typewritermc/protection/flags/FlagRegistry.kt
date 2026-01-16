@@ -66,8 +66,20 @@ class RegionFlagRegistry {
             RegionFlagKey.CREEPER_EXPLOSION,
             RegionFlagKey.TNT,
             RegionFlagKey.FIRE_SPREAD,
-            RegionFlagKey.WORLD_EDIT
+            // Environment flags - deny decay/spread/melt when set to false
+            RegionFlagKey.LEAF_DECAY,
+            RegionFlagKey.ICE_MELT,
+            RegionFlagKey.SNOW_MELT,
+            RegionFlagKey.LAVA_FLOW,
+            RegionFlagKey.WATER_FLOW,
+            RegionFlagKey.LAVA_FIRE,
+            RegionFlagKey.LIGHTNING,
+            RegionFlagKey.GRASS_GROWTH,
+            RegionFlagKey.VINE_GROWTH,
+            RegionFlagKey.ENDERMAN_GRIEF,
+            RegionFlagKey.GHAST_FIREBALL
         ).forEach { registerHandler(it, denyWhenFalse) }
+
 
         registerHandler(RegionFlagKey.PVP, denyWhenFalse)
 
@@ -533,6 +545,12 @@ class RegionFlagRegistry {
                 "Allow WorldEdit",
                 RegionFlagCategory.MISC,
                 inheritance = FlagInheritance.OVERRIDE_ONLY,
+            ),
+            RegionFlagKey.BIOME to textDefinition(
+                RegionFlagKey.BIOME,
+                "Override biome for players in this region (e.g., 'minecraft:plains', 'typewriter:my_biome')",
+                RegionFlagCategory.ENVIRONMENT,
+                PaperCompatibility.FOLIA_SAFE,
             ),
         )
 

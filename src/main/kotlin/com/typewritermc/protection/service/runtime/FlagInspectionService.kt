@@ -59,7 +59,7 @@ class FlagInspectionService {
         private val player: Player,
         snapshot: ProtectionSettingsSnapshot,
     ) {
-        private var task: BukkitTask? = null
+        private var task: com.typewritermc.protection.listener.SchedulerCompat.TaskHandle? = null
         private var refreshTicks: Long = snapshot.refreshTicks.coerceAtLeast(1)
         private var active = true
         private val bossBars = LinkedHashMap<String, BossBar>()
@@ -266,7 +266,7 @@ class FlagInspectionService {
         private fun scheduleNext() {
             task?.cancel()
             val delay = min(refreshTicks, 6000L)
-            task = Bukkit.getScheduler().runTaskLater(plugin, Runnable { tick() }, delay)
+            task = com.typewritermc.protection.listener.SchedulerCompat.runLater(plugin, player.location, delay) { tick() }
         }
 
         fun stop() {

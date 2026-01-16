@@ -10,6 +10,7 @@ import com.typewritermc.protection.listener.mob.MobSpawnProtectionListener
 import com.typewritermc.protection.listener.mob.MythicMobsSpawnProtectionListener
 import com.typewritermc.protection.listener.movement.MovementProtectionListener
 import com.typewritermc.protection.listener.environment.EnvironmentPropertiesProtectionListener
+import com.typewritermc.protection.listener.biome.RegionBiomeListener
 import com.typewritermc.protection.selection.SelectionService
 import com.typewritermc.protection.service.runtime.FlagInspectionService
 import com.typewritermc.protection.service.storage.RegionRepository
@@ -41,6 +42,7 @@ object ProtectionInitializer : Initializable {
             KoinJavaComponent.get(EnvironmentPropertiesProtectionListener::class.java),
             KoinJavaComponent.get(com.typewritermc.protection.listener.mob.EntityPropertiesProtectionListener::class.java),
             KoinJavaComponent.get(com.typewritermc.protection.listener.player.PlayerStateProtectionListener::class.java),
+            KoinJavaComponent.get(RegionBiomeListener::class.java),
         )
     }
     private val mythicLifecycleListener = object : Listener {

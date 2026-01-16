@@ -23,66 +23,66 @@ class MythicMobsSpawnProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onMythicMobPreSpawn(event: MythicMobPreSpawnEvent) {
-        val location = event.location
-        val region = dominantRegion(location)
-        if (region == null) {
-            logger.trace("No region matched MythicMob pre-spawn at {}", location)
-            return
+        val (evaluation, context) = evaluateFlag(
+            key = RegionFlagKey.MOB_SPAWNING,
+            event = event,
+            location = event.location
+        ) {
+            runtimeData["mob.spawn.reason"] = event.spawnReason.name
         }
 
-        val context = createContext(
-            region = region,
-            event = event,
-            location = location,
-        )
-        context.runtimeData["mob.spawn.reason"] = event.spawnReason.name
-
-        when (val evaluation = actionExecutor.evaluate(context, RegionFlagKey.MOB_SPAWNING)) {
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.MOB_SPAWNING, evaluation)
-                logger.debug(
-                    "Cancelled MythicMob pre-spawn at {} due to mob-spawning flag in region {}",
-                    location,
-                    region.id,
-                )
+                if (context != null) {
+                    actionExecutor.handleDenied(context, RegionFlagKey.MOB_SPAWNING, evaluation)
+                    logger.debug(
+                        "Cancelled MythicMob pre-spawn at {} due to mob-spawning flag in region {}",
+                        event.location,
+                        context.region.id,
+                    )
+                }
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, evaluation)
+            is FlagEvaluation.Modify -> {
+                if (context != null) {
+                    actionExecutor.applyModifications(context, evaluation)
+                }
+            }
             else -> Unit
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onMythicMobSpawn(event: MythicMobSpawnEvent) {
-        val location = event.location
-        val region = dominantRegion(location)
-        if (region == null) {
-            logger.trace("No region matched MythicMob spawn at {}", location)
-            return
+        val entity = event.entity as? LivingEntity
+        val (evaluation, context) = evaluateFlag(
+            key = RegionFlagKey.MOB_SPAWNING,
+            event = event,
+            location = event.location,
+            source = entity,
+            target = entity
+        ) {
+            runtimeData["mob.spawn.reason"] = event.spawnReason.name
         }
 
-        val entity = event.entity as? LivingEntity
-        val context = createContext(
-            region = region,
-            event = event,
-            location = location,
-            source = entity,
-            target = entity,
-        )
-        context.runtimeData["mob.spawn.reason"] = event.spawnReason.name
-
-        when (val evaluation = actionExecutor.evaluate(context, RegionFlagKey.MOB_SPAWNING)) {
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.MOB_SPAWNING, evaluation)
-                logger.debug(
-                    "Cancelled MythicMob spawn of {} at {} due to mob-spawning flag in region {}",
-                    entity?.type,
-                    location,
-                    region.id,
-                )
+                if (context != null) {
+                    actionExecutor.handleDenied(context, RegionFlagKey.MOB_SPAWNING, evaluation)
+                    logger.debug(
+                        "Cancelled MythicMob spawn of {} at {} due to mob-spawning flag in region {}",
+                        entity?.type,
+                        event.location,
+                        context.region.id,
+                    )
+                }
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, evaluation)
+            is FlagEvaluation.Modify -> {
+                if (context != null) {
+                    actionExecutor.applyModifications(context, evaluation)
+                }
+            }
             else -> Unit
         }
     }

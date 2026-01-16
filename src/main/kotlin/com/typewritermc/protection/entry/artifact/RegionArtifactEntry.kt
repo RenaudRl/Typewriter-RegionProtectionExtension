@@ -7,6 +7,7 @@ import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Tags
 import com.typewritermc.engine.paper.entry.entries.ArtifactEntry
 import com.typewritermc.protection.selection.content.ProtectionRegionContentMode
+import java.util.UUID
 
 @Tags("protection_region")
 @Entry(
@@ -19,7 +20,7 @@ open class RegionArtifactEntry(
     override val id: String = "",
     override val name: String = "",
     @ContentEditor(ProtectionRegionContentMode::class)
-    override val artifactId: String = "typewritermc:protection_region",
+    override val artifactId: String = UUID.randomUUID().toString(),
 ) : ArtifactEntry, TWEntry {
     override val path: String
         get() = "artifacts/${artifactId.sanitizedForPath()}.$extension"

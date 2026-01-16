@@ -25,47 +25,52 @@ class BuildProtectionListener(
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onBlockPlace(event: BlockPlaceEvent) {
         val location = event.blockPlaced.location
-        val region = dominantRegion(location)
-        if (region == null) {
-            logger.debug("No region matched block place at {}", location)
+        val player = event.player
+        
+        // Check BUILD flag first
+        var (evaluation, context) = evaluateFlag(RegionFlagKey.BUILD, event, location, player, source = player)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+            if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.BUILD, evaluation)
             return
         }
 
-        val context = createContext(region, event, location, event.player, source = event.player)
-        if (!evaluateFlag(event, context, RegionFlagKey.BUILD)) return
-        evaluateFlag(event, context, RegionFlagKey.BLOCK_PLACE)
+        // Check BLOCK_PLACE flag
+        val pair = evaluateFlag(RegionFlagKey.BLOCK_PLACE, event, location, player, source = player)
+        evaluation = pair.first
+        context = pair.second
+
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+            if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.BLOCK_PLACE, evaluation)
+        } else if (evaluation is FlagEvaluation.Modify && context != null) {
+            actionExecutor.applyModifications(context, evaluation)
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onBlockBreak(event: BlockBreakEvent) {
         val location = event.block.location
-        val region = dominantRegion(location)
-        if (region == null) {
-            logger.debug("No region matched block break at {}", location)
+        val player = event.player
+
+        // Check BUILD flag first
+        var (evaluation, context) = evaluateFlag(RegionFlagKey.BUILD, event, location, player, source = player)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+            if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.BUILD, evaluation)
             return
         }
 
-        val context = createContext(region, event, location, event.player, source = event.player)
-        if (!evaluateFlag(event, context, RegionFlagKey.BUILD)) return
-        evaluateFlag(event, context, RegionFlagKey.BLOCK_BREAK)
-    }
+        // Check BLOCK_BREAK flag
+        val pair = evaluateFlag(RegionFlagKey.BLOCK_BREAK, event, location, player, source = player)
+        evaluation = pair.first
+        context = pair.second
 
-    private fun evaluateFlag(
-        event: Cancellable,
-        context: FlagContext,
-        flag: RegionFlagKey,
-    ): Boolean {
-        return when (val result = actionExecutor.evaluate(context, flag)) {
-            is FlagEvaluation.Denied -> {
-                event.isCancelled = true
-                actionExecutor.handleDenied(context, flag, result)
-                false
-            }
-            is FlagEvaluation.Modify -> {
-                actionExecutor.applyModifications(context, result)
-                true
-            }
-            else -> true
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+            if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.BLOCK_BREAK, evaluation)
+        } else if (evaluation is FlagEvaluation.Modify && context != null) {
+            actionExecutor.applyModifications(context, evaluation)
         }
     }
 }

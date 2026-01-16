@@ -21,34 +21,34 @@ class MobSpawnProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onCreatureSpawn(event: CreatureSpawnEvent) {
-        val location = event.location
-        val region = dominantRegion(location)
-        if (region == null) {
-            logger.trace("No region matched creature spawn at {}", location)
-            return
+        val (evaluation, context) = evaluateFlag(
+            key = RegionFlagKey.MOB_SPAWNING,
+            event = event,
+            location = event.location,
+            source = event.entity,
+            target = event.entity
+        ) {
+            runtimeData["mob.spawn.reason"] = event.spawnReason.name
         }
 
-        val context = createContext(
-            region = region,
-            event = event,
-            location = location,
-            source = event.entity,
-            target = event.entity,
-        )
-        context.runtimeData["mob.spawn.reason"] = event.spawnReason.name
-
-        when (val evaluation = actionExecutor.evaluate(context, RegionFlagKey.MOB_SPAWNING)) {
+        when (evaluation) {
             is FlagEvaluation.Denied -> {
                 event.isCancelled = true
-                actionExecutor.handleDenied(context, RegionFlagKey.MOB_SPAWNING, evaluation)
-                logger.debug(
-                    "Cancelled {} spawn at {} due to mob-spawning flag in region {}",
-                    event.entity.type,
-                    location,
-                    region.id,
-                )
+                if (context != null) {
+                    actionExecutor.handleDenied(context, RegionFlagKey.MOB_SPAWNING, evaluation)
+                    logger.debug(
+                        "Cancelled {} spawn at {} due to mob-spawning flag in region {}",
+                        event.entity.type,
+                        event.location,
+                        context.region.id,
+                    )
+                }
             }
-            is FlagEvaluation.Modify -> actionExecutor.applyModifications(context, evaluation)
+            is FlagEvaluation.Modify -> {
+                if (context != null) {
+                    actionExecutor.applyModifications(context, evaluation)
+                }
+            }
             else -> Unit
         }
     }

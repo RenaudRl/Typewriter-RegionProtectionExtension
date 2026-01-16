@@ -12,6 +12,8 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToInt
 
+import com.typewritermc.protection.listener.SchedulerCompat
+
 private const val EDGE_STEP = 0.5
 private val DUST_PARTICLE: Particle = resolveDustParticle()
 
@@ -29,7 +31,7 @@ class SelectionVisualizer(
     private val plugin: Plugin,
     private val player: Player,
 ) {
-    private var task: BukkitTask? = null
+    private var task: SchedulerCompat.TaskHandle? = null
     private var cachedMode: SelectionMode? = null
     private var cachedNodes: List<Position> = emptyList()
     private var cachedRange: Pair<Double, Double>? = null
@@ -39,7 +41,7 @@ class SelectionVisualizer(
         cachedNodes = nodes
         cachedRange = range
         if (task == null) {
-            task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable { render() }, 10L, 10L)
+            task = SchedulerCompat.runTimer(plugin, player.location, 10L, 10L) { render() }
         }
     }
 

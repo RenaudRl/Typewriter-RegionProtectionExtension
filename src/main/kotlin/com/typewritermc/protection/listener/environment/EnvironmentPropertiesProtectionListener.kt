@@ -29,14 +29,9 @@ class EnvironmentPropertiesProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onLeavesDecay(event: LeavesDecayEvent) {
-        val region = dominantRegion(event.block.location) ?: return
-        val context = createContext(region, event, event.block.location)
-        
-        when (actionExecutor.evaluate(context, RegionFlagKey.LEAF_DECAY)) {
-            is FlagEvaluation.Denied -> {
-                event.isCancelled = true
-            }
-            else -> {}
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.LEAF_DECAY, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
@@ -49,14 +44,9 @@ class EnvironmentPropertiesProtectionListener(
             else -> null
         } ?: return
 
-        val region = dominantRegion(event.block.location) ?: return
-        val context = createContext(region, event, event.block.location)
-
-        when (actionExecutor.evaluate(context, flag)) {
-            is FlagEvaluation.Denied -> {
-                event.isCancelled = true
-            }
-            else -> {}
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
@@ -70,16 +60,9 @@ class EnvironmentPropertiesProtectionListener(
         } ?: return
 
         // Check if the flow destination is in a protected region
-        // Usually, we want to prevent flowing INTO or WITHIN a protected region if flow is disabled.
-        // Or preventing flowing OUT of a source block. 
-        // Standard WorldGuard behavior: check at the TO location.
-        val region = dominantRegion(event.toBlock.location) ?: return
-        val context = createContext(region, event, event.toBlock.location)
-
-
-        when (actionExecutor.evaluate(context, flag)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(flag, event, event.toBlock.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
@@ -91,34 +74,25 @@ class EnvironmentPropertiesProtectionListener(
             else -> RegionFlagKey.FIRE_SPREAD
         }
 
-        val region = dominantRegion(event.block.location) ?: return
-        val context = createContext(region, event, event.block.location)
-
-        when (actionExecutor.evaluate(context, flag)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onBlockBurn(event: BlockBurnEvent) {
-        val region = dominantRegion(event.block.location) ?: return
-        val context = createContext(region, event, event.block.location)
-
-        when (actionExecutor.evaluate(context, RegionFlagKey.FIRE_SPREAD)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.FIRE_SPREAD, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onLightningStrike(event: LightningStrikeEvent) {
-        val region = dominantRegion(event.lightning.location) ?: return
-        val context = createContext(region, event, event.lightning.location)
-
-        when (actionExecutor.evaluate(context, RegionFlagKey.LIGHTNING)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.LIGHTNING, event, event.lightning.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
@@ -127,15 +101,12 @@ class EnvironmentPropertiesProtectionListener(
         val type = event.newState.type
         val flag = when (type) {
             Material.VINE, Material.WEEPING_VINES, Material.TWISTING_VINES, Material.CAVE_VINES -> RegionFlagKey.VINE_GROWTH
-            else -> null // Other crops? usually allowed unless specific crop flags exist
+            else -> null
         } ?: return
 
-        val region = dominantRegion(event.block.location) ?: return
-        val context = createContext(region, event, event.block.location)
-
-        when (actionExecutor.evaluate(context, flag)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 
@@ -146,16 +117,13 @@ class EnvironmentPropertiesProtectionListener(
             Material.GRASS_BLOCK, Material.MYCELIUM, Material.DIRT_PATH -> RegionFlagKey.GRASS_GROWTH
             Material.VINE -> RegionFlagKey.VINE_GROWTH
             Material.FIRE -> RegionFlagKey.FIRE_SPREAD
-            Material.MUSHROOM_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM -> RegionFlagKey.GRASS_GROWTH // Approximation
+            Material.MUSHROOM_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM -> RegionFlagKey.GRASS_GROWTH
             else -> null
         } ?: return
 
-        val region = dominantRegion(event.block.location) ?: return
-        val context = createContext(region, event, event.block.location)
-
-        when (actionExecutor.evaluate(context, flag)) {
-            is FlagEvaluation.Denied -> event.isCancelled = true
-            else -> {}
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
         }
     }
 }

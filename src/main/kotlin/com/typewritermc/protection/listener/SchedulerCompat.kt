@@ -38,6 +38,19 @@ object SchedulerCompat {
         return taskHandle { scheduled.cancel() }
     }
 
+    fun runTimer(plugin: Plugin, location: Location?, delayTicks: Long, periodTicks: Long, task: () -> Unit): TaskHandle {
+        if (!isFolia) {
+            val scheduled: BukkitTask = Bukkit.getScheduler().runTaskTimer(plugin, Runnable { task() }, delayTicks, periodTicks)
+            return taskHandle { scheduled.cancel() }
+        }
+
+        val scheduled: ScheduledTask = location?.let { target ->
+            Bukkit.getRegionScheduler().runAtFixedRate(plugin, target, { _ -> task() }, delayTicks, periodTicks)
+        } ?: Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, { _ -> task() }, delayTicks, periodTicks)
+
+        return taskHandle { scheduled.cancel() }
+    }
+
     private fun taskHandle(cancel: () -> Unit): TaskHandle = object : TaskHandle {
         override fun cancel() = cancel()
     }
