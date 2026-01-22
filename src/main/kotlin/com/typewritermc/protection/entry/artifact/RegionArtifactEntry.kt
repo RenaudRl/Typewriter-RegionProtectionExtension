@@ -20,7 +20,7 @@ open class RegionArtifactEntry(
     override val id: String = "",
     override val name: String = "",
     @ContentEditor(ProtectionRegionContentMode::class)
-    override val artifactId: String = UUID.randomUUID().toString(),
+    override val artifactId: String = id,
 ) : ArtifactEntry, TWEntry {
     override val path: String
         get() = "artifacts/${artifactId.sanitizedForPath()}.$extension"

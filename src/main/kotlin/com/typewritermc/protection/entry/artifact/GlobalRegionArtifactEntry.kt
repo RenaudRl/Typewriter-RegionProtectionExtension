@@ -17,7 +17,7 @@ import java.util.UUID
 class GlobalRegionArtifactEntry(
     id: String = "",
     name: String = "",
-    artifactId: String = UUID.randomUUID().toString(),
+    artifactId: String = "global_region",
     @Help("World identifiers covered by this region")
     val worlds: List<String> = emptyList(),
     @Help("Minimum height included in the region")
