@@ -142,16 +142,7 @@ class RegionRepository {
         resolved: MutableMap<String, MutableRegionModel>,
     ): MutableRegionModel {
         resolved[definition.id]?.let { return it }
-        val artifact = definition.artifact.get() ?: run {
-            // Fallback to a deterministic artifact ID if none is explicitly linked
-            // This prevents generating new artifacts with random IDs on every load
-            val deterministicId = "region_data_${definition.id}"
-            com.typewritermc.protection.entry.artifact.RegionArtifactEntry(
-                id = deterministicId,
-                name = "${definition.name} Data",
-                artifactId = deterministicId
-            )
-        }
+        val artifact = definition.artifact.get()
         val parentDefinition = definition.parentDefinition
         val parentModel = parentDefinition?.let { parent ->
             resolve(parent, resolved)
