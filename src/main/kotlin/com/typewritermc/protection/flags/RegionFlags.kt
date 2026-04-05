@@ -76,7 +76,23 @@ enum class RegionFlagKey(val id: String) {
     ENTRY_MAX_LEVEL("entry-max-level"),
     PERMIT_COMPLETELY("permit-completely"),
     WORLD_EDIT("worldedit"),
-    BIOME("biome")
+    BIOME("biome"),
+    MOBTRAP_USE("mobtrap-use"),
+    LIGHTER("lighter"),
+    CHEST_ACCESS("chest-access"),
+    PISTONS("pistons"),
+    SNOW_FALL("snow-fall"),
+    ICE_FORM("ice-form"),
+    SEND_CHAT("send-chat"),
+    RECEIVE_CHAT("receive-chat"),
+    BLOCKED_CMDS("blocked-cmds"),
+    ALLOWED_CMDS("allowed-cmds"),
+    DAMAGE_ANIMALS("damage-animals"),
+    SLEEP("sleep"),
+    TNT_DAMAGE("tnt-damage"),
+    FIREWORK_DAMAGE("firework-damage"),
+    RAVAGER_GRIEF("ravager-grief"),
+    CROP_TRAMPLING("crop-trampling")
 }
 
 enum class RegionFlagCategory {

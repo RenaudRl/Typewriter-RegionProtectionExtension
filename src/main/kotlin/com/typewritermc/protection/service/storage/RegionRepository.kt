@@ -31,6 +31,7 @@ class RegionRepository {
     private val logger = Companion.logger
     private val lock = ReentrantReadWriteLock()
     private val regions = ConcurrentHashMap<String, RegionModel>()
+    private val spatialIndex = RegionSpatialIndex()
 
     init {
         reload()
@@ -46,6 +47,7 @@ class RegionRepository {
             }
             regions.clear()
             regions.putAll(partial.values.associateBy({ it.regionId }, { it.toRegionModel() }))
+            spatialIndex.rebuild(regions.values)
             loaded = regions.size
         }
         scheduleLoadLog(loaded)
@@ -57,7 +59,7 @@ class RegionRepository {
     fun findById(id: String): RegionModel? = lock.read { regions[id] }
 
     fun regionsAt(position: Position): List<RegionModel> = lock.read {
-        regions.values.filter { it.shape.contains(position) }.sortedByDescending { it.priority }
+        spatialIndex.query(position)
     }
 
     fun updateRegion(
@@ -77,7 +79,10 @@ class RegionRepository {
             val regionId = definition.id
             val current = regions[regionId]
             if (current != null) {
-                regions[regionId] = current.copy(shape = shape)
+                val updated = current.copy(shape = shape)
+                regions[regionId] = updated
+                spatialIndex.remove(current)
+                spatialIndex.add(updated)
                 logger.info("Updated region {} shape via {}", regionId, actor?.name ?: "system")
             } else {
                 val fallback = RegionModel(
@@ -94,6 +99,7 @@ class RegionRepository {
                     children = emptySet(),
                 )
                 regions[regionId] = fallback
+                spatialIndex.add(fallback)
                 logger.warn(
                     "Created runtime region model for {} while applying a selection (missing during update)",
                     regionId
@@ -124,7 +130,10 @@ class RegionRepository {
             } else {
                 regionIds.forEach { id ->
                     regions[id]?.let { model ->
-                        regions[id] = model.copy(shape = shape)
+                        val updated = model.copy(shape = shape)
+                        regions[id] = updated
+                        spatialIndex.remove(model)
+                        spatialIndex.add(updated)
                     }
                 }
                 logger.info(

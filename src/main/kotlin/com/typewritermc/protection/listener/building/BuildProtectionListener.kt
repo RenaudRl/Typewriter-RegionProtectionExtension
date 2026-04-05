@@ -13,6 +13,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityChangeBlockEvent
+import org.bukkit.event.entity.EntityInteractEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.block.Action
+import org.bukkit.Material
+import org.bukkit.entity.Ravager
 import org.slf4j.LoggerFactory
 
 @Singleton
@@ -71,6 +77,38 @@ class BuildProtectionListener(
             if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.BLOCK_BREAK, evaluation)
         } else if (evaluation is FlagEvaluation.Modify && context != null) {
             actionExecutor.applyModifications(context, evaluation)
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onEntityChangeBlock(event: EntityChangeBlockEvent) {
+        val entity = event.entity
+        if (entity is Ravager) {
+            val (evaluation, _) = evaluateFlag(RegionFlagKey.RAVAGER_GRIEF, event, event.block.location)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onPlayerInteract(event: PlayerInteractEvent) {
+        if (event.action == Action.PHYSICAL && event.clickedBlock?.type == Material.FARMLAND) {
+            val (evaluation, context) = evaluateFlag(RegionFlagKey.CROP_TRAMPLING, event, event.clickedBlock!!.location, event.player, source = event.player)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.CROP_TRAMPLING, evaluation)
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onEntityInteract(event: EntityInteractEvent) {
+        if (event.block?.type == Material.FARMLAND) {
+            val (evaluation, _) = evaluateFlag(RegionFlagKey.CROP_TRAMPLING, event, event.block!!.location)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+            }
         }
     }
 }

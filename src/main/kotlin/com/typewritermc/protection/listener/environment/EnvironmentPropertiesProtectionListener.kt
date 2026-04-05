@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockIgniteEvent
 import org.bukkit.event.block.BlockBurnEvent
 import org.bukkit.event.block.BlockGrowEvent
 import org.bukkit.event.block.BlockSpreadEvent
+import org.bukkit.event.block.BlockFormEvent
 import org.bukkit.event.weather.LightningStrikeEvent
 import org.slf4j.LoggerFactory
 
@@ -118,6 +119,21 @@ class EnvironmentPropertiesProtectionListener(
             Material.VINE -> RegionFlagKey.VINE_GROWTH
             Material.FIRE -> RegionFlagKey.FIRE_SPREAD
             Material.MUSHROOM_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM -> RegionFlagKey.GRASS_GROWTH
+            else -> null
+        } ?: return
+
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockForm(event: BlockFormEvent) {
+        val type = event.newState.type
+        val flag = when (type) {
+            Material.SNOW, Material.SNOW_BLOCK -> RegionFlagKey.SNOW_FALL
+            Material.ICE, Material.PACKED_ICE, Material.BLUE_ICE, Material.FROSTED_ICE -> RegionFlagKey.ICE_FORM
             else -> null
         } ?: return
 

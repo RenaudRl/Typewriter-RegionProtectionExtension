@@ -6,7 +6,11 @@ import com.typewritermc.protection.flags.RegionFlagKey
 import com.typewritermc.protection.listener.AbstractProtectionListener
 import com.typewritermc.protection.listener.FlagActionExecutor
 import com.typewritermc.protection.service.storage.RegionRepository
+import org.bukkit.entity.Animals
+import org.bukkit.entity.Entity
+import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
+import org.bukkit.entity.TNTPrimed
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -22,12 +26,47 @@ class CombatProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onDamage(event: EntityDamageByEntityEvent) {
-        val attacker = event.damager as? Player
-        if (attacker != null && !handleAttacker(event, attacker)) {
+        val victim = event.entity
+        val attacker = event.damager
+
+        // Check for PVP (Player vs Player)
+        if (victim is org.bukkit.entity.Player && attacker is org.bukkit.entity.Player) {
+            handleAttacker(event, attacker)
             return
         }
-        val victimPlayer = event.entity as? Player ?: return
-        handleVictim(event, victimPlayer)
+
+        // Check for DAMAGE_ANIMALS
+        if (victim is Animals && attacker is org.bukkit.entity.Player) {
+            val (evaluation, context) = evaluateFlag(RegionFlagKey.DAMAGE_ANIMALS, event, victim.location, attacker, source = attacker, target = victim)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.DAMAGE_ANIMALS, evaluation)
+                return
+            }
+        }
+
+        // Check for TNT_DAMAGE
+        if (attacker is TNTPrimed || attacker.name.contains("TNT")) {
+            val (evaluation, _) = evaluateFlag(RegionFlagKey.TNT_DAMAGE, event, victim.location)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+                return
+            }
+        }
+
+        // Check for FIREWORK_DAMAGE
+        if (attacker is Firework) {
+            val (evaluation, _) = evaluateFlag(RegionFlagKey.FIREWORK_DAMAGE, event, victim.location)
+            if (evaluation is FlagEvaluation.Denied) {
+                event.isCancelled = true
+                return
+            }
+        }
+
+        // Check for general MOB_DAMAGE if victim is a player
+        if (victim is org.bukkit.entity.Player) {
+            handleVictim(event, victim)
+        }
     }
 
     private fun handleAttacker(event: EntityDamageByEntityEvent, attacker: Player): Boolean {

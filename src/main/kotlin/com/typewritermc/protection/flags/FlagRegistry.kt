@@ -77,7 +77,20 @@ class RegionFlagRegistry {
             RegionFlagKey.GRASS_GROWTH,
             RegionFlagKey.VINE_GROWTH,
             RegionFlagKey.ENDERMAN_GRIEF,
-            RegionFlagKey.GHAST_FIREBALL
+            RegionFlagKey.GHAST_FIREBALL,
+            RegionFlagKey.LIGHTER,
+            RegionFlagKey.CHEST_ACCESS,
+            RegionFlagKey.PISTONS,
+            RegionFlagKey.SNOW_FALL,
+            RegionFlagKey.ICE_FORM,
+            RegionFlagKey.SEND_CHAT,
+            RegionFlagKey.RECEIVE_CHAT,
+            RegionFlagKey.DAMAGE_ANIMALS,
+            RegionFlagKey.SLEEP,
+            RegionFlagKey.TNT_DAMAGE,
+            RegionFlagKey.FIREWORK_DAMAGE,
+            RegionFlagKey.RAVAGER_GRIEF,
+            RegionFlagKey.CROP_TRAMPLING
         ).forEach { registerHandler(it, denyWhenFalse) }
 
 
@@ -551,6 +564,86 @@ class RegionFlagRegistry {
                 "Override biome for players in this region (e.g., 'minecraft:plains', 'typewriter:my_biome')",
                 RegionFlagCategory.ENVIRONMENT,
                 PaperCompatibility.FOLIA_SAFE,
+            ),
+            RegionFlagKey.MOBTRAP_USE to booleanDefinition(
+                RegionFlagKey.MOBTRAP_USE,
+                "Allow MobTrap capturing and throwing",
+                RegionFlagCategory.MISC,
+            ),
+            RegionFlagKey.LIGHTER to booleanDefinition(
+                RegionFlagKey.LIGHTER,
+                "Allow use of lighter (fire and steel)",
+                RegionFlagCategory.BLOCKS,
+            ),
+            RegionFlagKey.CHEST_ACCESS to booleanDefinition(
+                RegionFlagKey.CHEST_ACCESS,
+                "Allow accessing containers",
+                RegionFlagCategory.INVENTORY,
+            ),
+            RegionFlagKey.PISTONS to booleanDefinition(
+                RegionFlagKey.PISTONS,
+                "Allow piston movement",
+                RegionFlagCategory.BLOCKS,
+            ),
+            RegionFlagKey.SNOW_FALL to booleanDefinition(
+                RegionFlagKey.SNOW_FALL,
+                "Allow snow accumulation",
+                RegionFlagCategory.ENVIRONMENT,
+            ),
+            RegionFlagKey.ICE_FORM to booleanDefinition(
+                RegionFlagKey.ICE_FORM,
+                "Allow ice formation",
+                RegionFlagCategory.ENVIRONMENT,
+            ),
+            RegionFlagKey.SEND_CHAT to booleanDefinition(
+                RegionFlagKey.SEND_CHAT,
+                "Allow sending chat messages",
+                RegionFlagCategory.CHAT,
+            ),
+            RegionFlagKey.RECEIVE_CHAT to booleanDefinition(
+                RegionFlagKey.RECEIVE_CHAT,
+                "Allow receiving chat messages",
+                RegionFlagCategory.CHAT,
+            ),
+            RegionFlagKey.BLOCKED_CMDS to listDefinition(
+                RegionFlagKey.BLOCKED_CMDS,
+                "List of blocked commands",
+                RegionFlagCategory.CHAT,
+            ),
+            RegionFlagKey.ALLOWED_CMDS to listDefinition(
+                RegionFlagKey.ALLOWED_CMDS,
+                "List of allowed commands (overrides blocked)",
+                RegionFlagCategory.CHAT,
+            ),
+            RegionFlagKey.DAMAGE_ANIMALS to booleanDefinition(
+                RegionFlagKey.DAMAGE_ANIMALS,
+                "Allow damaging friendly animals",
+                RegionFlagCategory.COMBAT,
+            ),
+            RegionFlagKey.SLEEP to booleanDefinition(
+                RegionFlagKey.SLEEP,
+                "Allow using beds",
+                RegionFlagCategory.MISC,
+            ),
+            RegionFlagKey.TNT_DAMAGE to booleanDefinition(
+                RegionFlagKey.TNT_DAMAGE,
+                "Allow TNT explosion damage to entities",
+                RegionFlagCategory.COMBAT,
+            ),
+            RegionFlagKey.FIREWORK_DAMAGE to booleanDefinition(
+                RegionFlagKey.FIREWORK_DAMAGE,
+                "Allow firework damage",
+                RegionFlagCategory.COMBAT,
+            ),
+            RegionFlagKey.RAVAGER_GRIEF to booleanDefinition(
+                RegionFlagKey.RAVAGER_GRIEF,
+                "Allow ravagers to destroy blocks",
+                RegionFlagCategory.BLOCKS,
+            ),
+            RegionFlagKey.CROP_TRAMPLING to booleanDefinition(
+                RegionFlagKey.CROP_TRAMPLING,
+                "Allow crop trampling",
+                RegionFlagCategory.BLOCKS,
             ),
         )
 

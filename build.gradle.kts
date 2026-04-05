@@ -1,75 +1,51 @@
-plugins {
+﻿plugins {
     kotlin("jvm") version "2.2.10"
-    id("com.typewritermc.module-plugin")
+    id("com.typewritermc.module-plugin") version "2.1.0"
 }
-
-val typewriterEngineVersion = file("../../version.txt").readText().trim()
-
-group = "com.typewritermc.protection"
-version = "0.1.0"
 
 repositories {
-    maven("https://maven.enginehub.org/repo/")
-    maven("https://maven.typewritermc.com/external")
-    maven("https://repo.fastasyncworldedit.dev/releases/") { content { includeGroup("com.fastasyncworldedit") } }
-    maven("https://mvn.lumine.io/repository/maven-public/")
+    maven("https://repo.codemc.io/repository/maven-public/")
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
-    mavenLocal()
+    maven("https://repo.bluecolored.de/releases")
+    flatDir {
+        dir("libs")
+    }
+}
+dependencies {
+    implementation("com.typewritermc:QuestExtension:0.9.0")
+    implementation(files("libs/QuestPlusExtension.jar"))
+    implementation(kotlin("reflect"))
+    compileOnly("de.bluecolored:bluemap-api:2.7.3")
+    compileOnly("com.flowpowered:flow-math:1.0.3")
 }
 
-dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.55"))
-    compileOnly(platform("com.intellectualsites.bom:bom-newest:1.55"))
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.17")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.lumine:Mythic-Dist:5.8.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation("com.google.code.gson:gson:2.11.0")
-    testImplementation(kotlin("test"))
-    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
-    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
-    testImplementation("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.98.0")
-    testImplementation("ch.qos.logback:logback-classic:1.5.12")
-    testImplementation("com.typewritermc:engine-core:$typewriterEngineVersion")
-    testImplementation("com.typewritermc:engine-paper:$typewriterEngineVersion")
+
+
+group = "btc.renaud"
+version = "0.1.0"
+
+typewriter {
+    namespace = "renaud"
+
+    extension {
+        name = "Protection"
+        shortDescription = "Region management system for TypeWriter"
+        description = """
+            |Protection Extension is a region management system for TypeWriter, 
+            |engineered for BTC Studio infrastructure. It provides WorldGuard-grade 
+            |protection features, fully optimized for Paper and Folia environments.
+            """.trimMargin()
+        engineVersion = "0.9.0-beta-171"
+        channel = com.typewritermc.moduleplugin.ReleaseChannel.BETA
+
+        dependencies {
+            dependency("typewritermc", "Quest")
+            paper()
+        }
+    }
 }
 
 kotlin {
     jvmToolchain(21)
 }
-
-
-typewriter {
-    namespace = "typewritermc"
-
-    extension {
-        name = "Protection"
-        shortDescription = "WorldGuard-grade protections managed in TypeWriter"
-        description = """
-            Provides a full-featured region engine with flag presets, selection tools and
-            Paper/Folia-safe runtime enforcement so BornToCraft servers can drop the
-            WorldGuard + ExtraFlags dependency entirely.
-        """.trimIndent()
-        engineVersion = file("../../version.txt").readText().trim()
-        channel = com.typewritermc.moduleplugin.ReleaseChannel.BETA
-
-        dependencies {
-            paper {
-                dependency("TypeWriter")
-            }
-        }
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-
 

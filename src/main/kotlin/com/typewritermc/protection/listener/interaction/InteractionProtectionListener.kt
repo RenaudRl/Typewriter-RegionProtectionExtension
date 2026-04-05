@@ -42,13 +42,51 @@ class InteractionProtectionListener(
         }
 
         // Check for USE
-        if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null && isUseInteraction(event.clickedBlock!!.type)) {
-             val (evaluation, context) = evaluateFlag(RegionFlagKey.USE, event, location, player, source = player)
-             if (evaluation is FlagEvaluation.Denied) {
-                event.isCancelled = true
-                if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.USE, evaluation)
-                return
-             }
+        if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null) {
+            val type = event.clickedBlock!!.type
+            
+            // Check for CHEST_ACCESS
+            if (isContainer(type)) {
+                val (evaluation, context) = evaluateFlag(RegionFlagKey.CHEST_ACCESS, event, location, player, source = player)
+                if (evaluation is FlagEvaluation.Denied) {
+                    event.isCancelled = true
+                    if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.CHEST_ACCESS, evaluation)
+                    return
+                }
+            }
+
+            // Check for SLEEP
+            if (type.name.contains("BED")) {
+                val (evaluation, context) = evaluateFlag(RegionFlagKey.SLEEP, event, location, player, source = player)
+                if (evaluation is FlagEvaluation.Denied) {
+                    event.isCancelled = true
+                    if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.SLEEP, evaluation)
+                    return
+                }
+            }
+
+            // Check for general USE
+            if (isUseInteraction(type)) {
+                val (evaluation, context) = evaluateFlag(RegionFlagKey.USE, event, location, player, source = player)
+                if (evaluation is FlagEvaluation.Denied) {
+                    event.isCancelled = true
+                    if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.USE, evaluation)
+                    return
+                }
+            }
+        }
+
+        // Check for LIGHTER
+        if (event.action == Action.RIGHT_CLICK_BLOCK && event.item != null) {
+            val type = event.item!!.type
+            if (type == Material.FLINT_AND_STEEL || type == Material.FIRE_CHARGE) {
+                val (evaluation, context) = evaluateFlag(RegionFlagKey.LIGHTER, event, location, player, source = player)
+                if (evaluation is FlagEvaluation.Denied) {
+                    event.isCancelled = true
+                    if (context != null) actionExecutor.handleDenied(context, RegionFlagKey.LIGHTER, evaluation)
+                    return
+                }
+            }
         }
         
         // Fallback to generic INTERACT
@@ -136,6 +174,20 @@ class InteractionProtectionListener(
             }
             else -> Unit
         }
+    }
+
+    private fun isContainer(type: Material): Boolean {
+        val name = type.name
+        return name.contains("CHEST") || 
+               name.contains("BARREL") || 
+               name.contains("SHULKER") || 
+               name.contains("HOPPER") || 
+               name.contains("DISPENSER") || 
+               name.contains("DROPPER") || 
+               name.contains("FURNACE") || 
+               name.contains("SMOKER") || 
+               name.contains("BLAST_FURNACE") || 
+               name.contains("BREWING_STAND")
     }
 }
 

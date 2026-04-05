@@ -40,7 +40,11 @@ class MovementProtectionListener(
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun onMove(event: PlayerMoveEvent) {
-        val decision = runtimeService.enforceEntry(event.player, event.from?.toTWPosition(), event.to?.toTWPosition(), event)
+        val from = event.from
+        val to = event.to
+        if (from.blockX == to.blockX && from.blockY == to.blockY && from.blockZ == to.blockZ) return
+
+        val decision = runtimeService.enforceEntry(event.player, from.toTWPosition(), to.toTWPosition(), event)
         if (decision is Blocked) {
             event.isCancelled = true
             handleBlocked(event, decision, event.to, "Movement")
