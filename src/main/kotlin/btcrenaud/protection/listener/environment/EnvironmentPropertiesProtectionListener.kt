@@ -1,0 +1,145 @@
+package btcrenaud.protection.listener.environment
+
+import com.typewritermc.core.extension.annotations.Singleton
+import btcrenaud.protection.flags.FlagEvaluation
+import btcrenaud.protection.flags.RegionFlagKey
+import btcrenaud.protection.listener.AbstractProtectionListener
+import btcrenaud.protection.listener.FlagActionExecutor
+import btcrenaud.protection.service.storage.RegionRepository
+import org.bukkit.Material
+import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockFadeEvent
+import org.bukkit.event.block.BlockFromToEvent
+import org.bukkit.event.block.LeavesDecayEvent
+import org.bukkit.event.block.BlockIgniteEvent
+import org.bukkit.event.block.BlockBurnEvent
+import org.bukkit.event.block.BlockGrowEvent
+import org.bukkit.event.block.BlockSpreadEvent
+import org.bukkit.event.block.BlockFormEvent
+import org.bukkit.event.weather.LightningStrikeEvent
+import org.slf4j.LoggerFactory
+
+@Singleton
+class EnvironmentPropertiesProtectionListener(
+    repository: RegionRepository,
+    actionExecutor: FlagActionExecutor,
+) : AbstractProtectionListener(repository, actionExecutor), Listener {
+    private val logger = LoggerFactory.getLogger("EnvironmentPropertiesProtectionListener")
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onLeavesDecay(event: LeavesDecayEvent) {
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.LEAF_DECAY, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockFade(event: BlockFadeEvent) {
+        val type = event.block.type
+        val flag = when {
+            type == Material.ICE || type == Material.PACKED_ICE || type == Material.BLUE_ICE || type == Material.FROSTED_ICE -> RegionFlagKey.ICE_MELT
+            type == Material.SNOW || type == Material.SNOW_BLOCK -> RegionFlagKey.SNOW_MELT
+            else -> null
+        } ?: return
+
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockFromTo(event: BlockFromToEvent) {
+        val type = event.block.type
+        val flag = when (type) {
+            Material.LAVA -> RegionFlagKey.LAVA_FLOW
+            Material.WATER -> RegionFlagKey.WATER_FLOW
+            else -> null
+        } ?: return
+
+        // Check if the flow destination is in a protected region
+        val (evaluation, _) = evaluateFlag(flag, event, event.toBlock.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockIgnite(event: BlockIgniteEvent) {
+        val flag = when (event.cause) {
+            BlockIgniteEvent.IgniteCause.LAVA -> RegionFlagKey.LAVA_FIRE
+            BlockIgniteEvent.IgniteCause.LIGHTNING -> RegionFlagKey.LIGHTNING
+            else -> RegionFlagKey.FIRE_SPREAD
+        }
+
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockBurn(event: BlockBurnEvent) {
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.FIRE_SPREAD, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onLightningStrike(event: LightningStrikeEvent) {
+        val (evaluation, _) = evaluateFlag(RegionFlagKey.LIGHTNING, event, event.lightning.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockGrow(event: BlockGrowEvent) {
+        val type = event.newState.type
+        val flag = when (type) {
+            Material.VINE, Material.WEEPING_VINES, Material.TWISTING_VINES, Material.CAVE_VINES -> RegionFlagKey.VINE_GROWTH
+            else -> null
+        } ?: return
+
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockSpread(event: BlockSpreadEvent) {
+        val type = event.newState.type
+        val flag = when (type) {
+            Material.GRASS_BLOCK, Material.MYCELIUM, Material.DIRT_PATH -> RegionFlagKey.GRASS_GROWTH
+            Material.VINE -> RegionFlagKey.VINE_GROWTH
+            Material.FIRE -> RegionFlagKey.FIRE_SPREAD
+            Material.MUSHROOM_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM -> RegionFlagKey.GRASS_GROWTH
+            else -> null
+        } ?: return
+
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    fun onBlockForm(event: BlockFormEvent) {
+        val type = event.newState.type
+        val flag = when (type) {
+            Material.SNOW, Material.SNOW_BLOCK -> RegionFlagKey.SNOW_FALL
+            Material.ICE, Material.PACKED_ICE, Material.BLUE_ICE, Material.FROSTED_ICE -> RegionFlagKey.ICE_FORM
+            else -> null
+        } ?: return
+
+        val (evaluation, _) = evaluateFlag(flag, event, event.block.location)
+        if (evaluation is FlagEvaluation.Denied) {
+            event.isCancelled = true
+        }
+    }
+}
