@@ -1,4 +1,0 @@
-D:\GitHub\ExtensionsPublics\ProtectionExtension\src\test\kotlin\com\typewritermc\protection\flags\FlagEvaluationServiceTest.kt
-D:\GitHub\ExtensionsPublics\ProtectionExtension\src\test\kotlin\com\typewritermc\protection\flags\RegionFlagRegistryTest.kt
-D:\GitHub\ExtensionsPublics\ProtectionExtension\src\test\kotlin\com\typewritermc\protection\listener\ProtectionListenersIntegrationTest.kt
-D:\GitHub\ExtensionsPublics\ProtectionExtension\src\test\kotlin\com\typewritermc\protection\settings\ProtectionMessagesTest.kt
