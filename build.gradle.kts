@@ -8,6 +8,7 @@ version = "0.1.0"
 
 repositories {
     mavenLocal()
+    maven("https://jitpack.io/")
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-public/")
@@ -29,7 +30,7 @@ typewriter {
         name = "Protection"
         shortDescription = "WorldGuard-grade protections managed in TypeWriter"
         description = """Provides a full-featured region engine with flag presets, selection tools and Paper/Folia-safe runtime enforcement so BornToCraft servers can drop the WorldGuard + ExtraFlags dependency entirely."""
-        engineVersion = "0.9.0-beta-173"
+        engineVersion = "0.9.0-beta-174"
         channel = com.typewritermc.moduleplugin.ReleaseChannel.BETA
 
         dependencies {
@@ -41,6 +42,9 @@ typewriter {
     }
 }
 
+    
+
 kotlin {
     jvmToolchain(25)
+    
 }
