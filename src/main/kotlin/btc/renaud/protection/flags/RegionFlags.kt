@@ -180,13 +180,13 @@ sealed interface FlagValue {
         val enabled: kotlin.Boolean = true,
     ) : FlagValue
 
-    @AlgebraicTypeInfo("flag_value_int", Colors.AMBER, "mdi:numeric")
+    @AlgebraicTypeInfo("flag_value_int", "#FFB300", "mdi:numeric")
     data class IntValue(
         @field:Help("Simple integer payload")
         val value: Int = 0,
     ) : FlagValue
 
-    @AlgebraicTypeInfo("flag_value_double", Colors.AMBER, "mdi:numeric-1-box-multiple-outline")
+    @AlgebraicTypeInfo("flag_value_double", "#FFB300", "mdi:numeric-1-box-multiple-outline")
     data class DoubleValue(
         @field:Help("Double precision payload")
         val value: Double = 0.0,

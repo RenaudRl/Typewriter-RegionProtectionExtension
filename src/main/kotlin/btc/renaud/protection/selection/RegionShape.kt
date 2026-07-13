@@ -141,7 +141,7 @@ data class CylinderShape(
 }
 
 /** Simplified 2D polygon used for world-edit imports. */
-@AlgebraicTypeInfo("region_shape_flat_polygon", Colors.AMBER, "mdi:vector-polygon")
+@AlgebraicTypeInfo("region_shape_flat_polygon", "#FFB300", "mdi:vector-polygon")
 data class FlatPolygonShape(
     @Help("Height at which the polygon is evaluated")
     val y: Double = 64.0,
