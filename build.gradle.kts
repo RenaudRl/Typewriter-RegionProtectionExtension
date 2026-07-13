@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "btcrenaud"
-version = "0.1.0"
+version = "0.1.1"
 
 repositories {
     mavenLocal()
@@ -30,7 +30,7 @@ typewriter {
         name = "Protection"
         shortDescription = "WorldGuard-grade protections managed in TypeWriter"
         description = """Provides a full-featured region engine with flag presets, selection tools and Paper/Folia-safe runtime enforcement so BornToCraft servers can drop the WorldGuard + ExtraFlags dependency entirely."""
-        engineVersion = "0.9.0-beta-174"
+        engineVersion = "0.9.0-beta-175"
         channel = com.typewritermc.moduleplugin.ReleaseChannel.BETA
 
         dependencies {
