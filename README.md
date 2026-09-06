@@ -6,6 +6,10 @@
 
 **Protection Extension** is a region management system for **TypeWriter**, engineered for **BTC Studio** infrastructure. It provides WorldGuard-grade protection features, fully optimized for Paper and Folia environments.
 
+> **Deprecated:** this is the final compatibility release of the public Protection extension.
+> Typewriter's native region system is the replacement for new deployments; this extension is
+> retained for existing servers and will receive no new features.
+
 ---
 
 ## 🚀 Key Features
