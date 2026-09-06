@@ -1,13 +1,12 @@
 plugins {
-    kotlin("jvm") version "2.3.20"
-    id("com.typewritermc.module-plugin") version "2.1.0"
+    kotlin("jvm") version "2.2.10"
+    id("com.typewritermc.module-plugin") version "2.2.0"
 }
 
 group = "btcrenaud"
-version = "0.1.2"
+version = "0.1.3"
 
 repositories {
-    mavenLocal()
     maven("https://jitpack.io/")
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
@@ -28,9 +27,9 @@ typewriter {
 
     extension {
         name = "Protection"
-        shortDescription = "WorldGuard-grade protections managed in TypeWriter"
-        description = """Provides a full-featured region engine with flag presets, selection tools and Paper/Folia-safe runtime enforcement so BornToCraft servers can drop the WorldGuard + ExtraFlags dependency entirely."""
-        engineVersion = "0.9.0-beta-175"
+        shortDescription = "DEPRECATED — WorldGuard-grade protections managed in TypeWriter"
+        description = """DEPRECATED compatibility release. Provides the existing region engine with flag presets, selection tools and Paper/Folia-safe runtime enforcement. New deployments should use Typewriter's native region system; no new features are planned for this extension."""
+        engineVersion = "0.9.0-beta-176"
         channel = com.typewritermc.moduleplugin.ReleaseChannel.BETA
 
         dependencies {
