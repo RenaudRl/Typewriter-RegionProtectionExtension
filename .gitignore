@@ -1,0 +1,10 @@
+
+
+# Sorties de build regenerees ; jamais suivies.
+build/
+build-out/
+.gradle/
+target/
+*.jar
+*.log
+__pycache__/

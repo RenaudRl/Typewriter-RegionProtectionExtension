@@ -29,7 +29,7 @@ typewriter {
         name = "Protection"
         shortDescription = "DEPRECATED — WorldGuard-grade protections managed in TypeWriter"
         description = """DEPRECATED compatibility release. Provides the existing region engine with flag presets, selection tools and Paper/Folia-safe runtime enforcement. New deployments should use Typewriter's native region system; no new features are planned for this extension."""
-        engineVersion = "0.9.0-beta-176"
+        engineVersion = "0.9.0-beta-177"
         channel = com.typewritermc.moduleplugin.ReleaseChannel.BETA
 
         dependencies {
