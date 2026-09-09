@@ -8,3 +8,5 @@ target/
 *.jar
 *.log
 __pycache__/
+.kotlin/
+bin/
