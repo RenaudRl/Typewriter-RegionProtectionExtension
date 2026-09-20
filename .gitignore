@@ -1,5 +1,3 @@
-
-
 # Sorties de build regenerees ; jamais suivies.
 build/
 build-out/
@@ -10,3 +8,8 @@ target/
 __pycache__/
 .kotlin/
 bin/
+
+# Jars fournis a la main (moteur Typewriter, extensions tierces).
+# Le moteur Typewriter NE DOIT PAS etre redistribue : sa licence l'interdit
+# explicitement (Typewriter Software License Agreement, 3.1).
+libs/
