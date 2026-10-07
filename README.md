@@ -1,10 +1,10 @@
 # Protection Extension
 
 ![Java Version](https://img.shields.io/badge/Java-21-orange)
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Target](https://img.shields.io/badge/Target-Paper%20/%20Folia%20/%20BTC--CORE-blue)
+![Target](https://img.shields.io/badge/Target-Paper-blue)
+![Typewriter](https://img.shields.io/badge/Typewriter-0.9.0--beta--177-purple)
 
-**Protection Extension** is a region management system for **TypeWriter**, engineered for **BTC Studio** infrastructure. It provides WorldGuard-grade protection features, fully optimized for Paper and Folia environments.
+**Protection Extension** is a region management system for **TypeWriter**, built for **BTC Studio** infrastructure. Regions are cuboids or polygon prisms stored in artifacts; flags on a region cancel or change what players do inside it.
 
 > **Deprecated:** this is the final compatibility release of the public Protection extension.
 > Typewriter's native region system is the replacement for new deployments; this extension is
@@ -14,19 +14,46 @@
 
 ## 🚀 Key Features
 
-### 🛡️ Region Management
-- **Full-Featured Engine**: Create and manage regions with a robust selection toolset.
-- **Flag Presets**: Pre-configured flags for common protection scenarios.
-
-### ⚡ Performance Optimized
-- **Paper/Folia Safe**: Runtime enforcement designed for modern async architectures.
-- **Lightweight Replacement**: Replaces the heavy WorldGuard + ExtraFlags dependency stack.
+- **Cuboid and polygon regions**: draw them in game with a hotbar toolbar, or convert a WorldEdit selection.
+- **World-wide regions**: a global region artifact covers whole worlds.
+- **Flags, priority and parents**: flag evaluation by priority, with owners, members and a parent region.
+- **Region events and filters**: enter and exit events, an audience filter, a group and a fact.
+- **Inspection and migration**: show the flags that apply where you stand; import regions from WorldGuard.
 
 ---
 
+## 🧩 Available Entries
+
+| Type | Entries |
+|---|---|
+| Manifest | `protection_settings`, `region_definition` |
+| Artifact | `protection_region_artifact`, `global_protection_region_artifact` |
+| Event | `on_enter_protection_region`, `on_exit_protection_region` |
+| Audience | `protection_region_audience`, `protection_region_group` |
+| Fact | `in_protection_region_fact` |
+
+## ⌨️ Commands and Permissions
+
+`/typewriter protection <subcommand>` (permission `typewriter.protection`):
+`list`, `edit`, `remove`, `import-we`, `apply`, `cancel`, `info`, `flags`, `teleport`, `inspect`, `wand`.
+
+Admin subcommands (permission `typewriter.protection.admin`):
+`setflag`, `clearflag`, `addowner`, `removeowner`, `addmember`, `removemember`, `reload`,
+`migrate-from-worldguard`, `delete`.
+
+`typewriter.protection.bypass` lets a player ignore the flags of every region.
+
+---
+
+## 📋 Requirements
+
+- **Typewriter** `0.9.0-beta-177` (with PacketEvents, which Typewriter already requires)
+- **Paper** (no Folia support is promised)
+- Optional: WorldEdit or FastAsyncWorldEdit (`import-we`), MythicMobs (`mob-spawning` flag on Mythic mobs), BlueMap (regions on the map)
+
 ## ⚙️ Configuration
 
-Protection Extension configuration is managed via TypeWriter's manifest system.
+Everything is configured from the Typewriter web panel through the entries above.
 
 ## 🛠 Building & Deployment
 
@@ -34,15 +61,14 @@ Requires **Java 21**.
 
 ```bash
 # Clone the repository
-git clone https://github.com/RenaudRl/ProtectionExtension.git
-cd ProtectionExtension
+git clone https://github.com/RenaudRl/Typewriter-RegionProtectionExtension.git
+cd Typewriter-RegionProtectionExtension
 
 # Build the project
 ./gradlew clean build
 ```
 
-### Artifact Locations:
-- `build/libs/Protection-[Version].jar`
+Output: `build/libs/ProtectionExtension-<version>.jar`
 
 ---
 
@@ -50,14 +76,9 @@ cd ProtectionExtension
 - **[TypeWriter](https://github.com/gabber235/Typewriter)** - The engine this extension is built for.
 - **[BTC Studio](https://github.com/RenaudRl)** - Maintenance and specialized optimizations.
 
----
+## 📖 Documentation
 
-## 📜 License
-Licensed under the **MIT License**.
-
-## Documentation
-
-Full documentation available at [BTC Studio Docs](https://docs.borntocraftstudio.net/extensions/free/protection/).
+Full documentation (flag list, getting started): [BTC Studio Docs](https://docs.borntocraftstudio.net/extensions/free/protection/).
 
 ---
 
